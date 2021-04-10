@@ -1,0 +1,13 @@
+FROM node:10-alpine
+
+ENV CHROME_BIN="/usr/bin/chromium-browser"
+
+RUN npm install -g @angular/cli
+
+RUN apk add --no-cache  chromium --repository=http://dl-cdn.alpinelinux.org/alpine/v3.10/main
+
+WORKDIR /src
+
+EXPOSE 4200
+
+CMD ["/bin/sh"]

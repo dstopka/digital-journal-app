@@ -1,0 +1,23 @@
+FROM ubuntu:20.04
+
+RUN apt-get update \
+ && apt-get install -y wget curl \
+ && apt-get install -y libfontconfig1 libxrender1 libxtst6 libxi6 libsecret-1-0 gnome-keyring \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /home
+
+RUN wget https://dot.net/v1/dotnet-install.sh \
+ && mkdir -p /usr/share/dotnet \
+ && chmod +x dotnet-install.sh \
+ && ./dotnet-install.sh --install-dir /usr/share/dotnet --version 3.1.402 \
+ && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet \
+ && rm dotnet-install.sh
+
+RUN dotnet dev-certs https
+
+WORKDIR /src
+
+EXPOSE 5000
+
+CMD ["/bin/sh"]
