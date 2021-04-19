@@ -2,6 +2,10 @@
 
 NODE_IMAGE="node_env"
 DOTNET_IMAGE="dotnet_env"
+BASE_DIR=$(dirname $(realpath "$0"))
+DOCKER_COMMON_OPTIONS="--rm -ti -v ${BASE_DIR}/JournalApi:/src"
+DOCKERFILE_DOTNET=".docker/Dockerfile.dotnet"
+DOCKERFILE_NODE=".docker/Dockerfile.node"
 
 check_image() {
     [[ "$(docker images -q $1 2> /dev/null)" == "" ]] && return 1
@@ -9,21 +13,21 @@ check_image() {
     return 0
 }
 
+step() {
+    local step=" $@ "
+    local line=$(eval printf "%0.s-" {1..5})
+    echo -e "\n\033[31m${line}${step}${line}\033[0m\n"
+}
+
 usage_main() {
     cat << EOF
 
-    run_env script's help
-
-    USAGE:
-
-    $0 -h|--help
-
-    COMMANDS:
-
-    run                 Runs development environment in docker container.
+USAGE: $0 [[build]|run|-h|--help]
 
     OPTIONS:
 
+    build:              Build environment docker image. Default option.
+    run:                Run development environment in a docker container.
     -h, --help:         Print help.
 
 EOF
@@ -32,11 +36,9 @@ EOF
 usage_build() {
     cat << EOF
 
-    Build development environment container
+USAGE: $0 build [[-a|--all]|-d|--dotnet|-n|--node|-h|--help]
 
-    USAGE:
-
-    $0 build [OPTIONS]
+    Build development environment image
 
     OPTIONS:
 
@@ -49,7 +51,10 @@ EOF
 }
 
 build() {
-    case "$1" in
+    local option=${1:--a}
+    local rc=
+
+    case ${option} in
         -h|--help)
             usage_build
             return $?
@@ -57,16 +62,25 @@ build() {
         -a|--all|"")
             build --dotnet
             [ $? -ne 0 ] && return 1
+
             build --node
             [ $? -ne 0 ] && return 1
             ;;
         -d|--dotnet)
-            docker build -f .docker/Dockerfile.dotnet -t ${DOTNET_IMAGE} .
-            [ $? -ne 0 ] && return 1
+            step "BUILDING ${DOTNET_IMAGE}"
+
+            set -x
+            time docker build -f ${DOCKERFILE_DOTNET} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${DOTNET_IMAGE} .
+            rc=$?
+            set +x
             ;;
         -n|--node)
-            docker build -f .docker/Dockerfile.node -t ${NODE_IMAGE} .
-            [ $? -ne 0 ] && return 1
+            step "Building ${NODE_IMAGE}"
+
+            set -x
+            time docker build -f ${DOCKERFILE_NODE} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${NODE_IMAGE} .
+            rc=$?
+            set +x
             ;;
         *)
             echo "Unexpected argument $1!"
@@ -75,18 +89,16 @@ build() {
             ;;
     esac
 
-    return 0
+    return $rc
 }
 
 
 usage_run() {
     cat << EOF
 
+USAGE: $0 run [-d|--dotnet|-n|--node|-h|--help] [--build]
+
     Run development environment in docker container
-
-    USAGE:
-
-    $0 run [OPTIONS]
 
     OPTIONS:
 
@@ -95,34 +107,42 @@ usage_run() {
     -h, --help:         Print help.
 
     --build:            Extra option to rebuild image before running.
+                        This option defaults to false.
 
 EOF
 }
 
 run() {
-    script_dir=$(dirname $(realpath "$0"))
-    rebuild=false
+    
+    local rebuild=
+    local rc=
 
     [ "$2" == "--build" ] && rebuild=true
 
     case "$1" in
-        -h|--help)
+        -h|--help|"")
             usage_run
             return $?
             ;;
         -d|--dotnet)
             check_image ${DOTNET_IMAGE}
-            [ $? -ne 0 ] || [ $rebuild = true ] && build --dotnet
+            [ $? -ne 0 ] || [[ $rebuild == true ]] && build --dotnet
 
-            docker run --rm -ti -v ${script_dir}/JournalApi:/src ${DOTNET_IMAGE}
-            [ $? -ne 0 ] && return 1
+            step "STARTING ${DOTNET_IMAGE}"
+            set -x
+            docker run ${DOCKER_COMMON_OPTIONS} ${DOTNET_IMAGE}
+            rc=$?
+            set +x
             ;;
         -n|--node)
             check_image ${NODE_IMAGE}
             [ $? -ne 0 ] || [ $rebuild = true ] && build --node
 
-            docker run --rm -ti -v ${script_dir}/JournalApp:/src ${NODE_IMAGE}
-            [ $? -ne 0 ] && return 1
+            step "STARTING ${NODE_IMAGE}"
+            set -x
+            docker run ${DOCKER_COMMON_OPTIONS} ${NODE_IMAGE}
+            rc=$?
+            set +x
             ;;
         *)
             echo "Unexpected argument $1!"
@@ -131,10 +151,13 @@ run() {
             ;;
     esac
 
-    return 0
+    return $rc
 }
 
-case "$1" in
+run_command="$0 $@"
+option=${1:-build}
+
+case ${option} in
     -h|--help)
         usage_main
         ;;
@@ -147,9 +170,11 @@ case "$1" in
         build $@
         ;;
     *)
-        echo "Unexpected argument $1! (try -h|--help)"
+        echo "Unexpected argument $1! Run: $0 --help"
         ;;
 esac
 RC=$?
 
-exit ${RC}
+[ $RC -ne 0 ] && echo -e "\nExecution of: ${run_command} failed!\n"
+
+exit $RC

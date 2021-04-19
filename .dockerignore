@@ -1,1 +1,5 @@
 JournalApp/node_modules
+JournalApi/.idea
+JournalApi/JournalApi/bin
+JournalApi/JournalApi/obj
+JournalApi/JournalApi/inspect.xml

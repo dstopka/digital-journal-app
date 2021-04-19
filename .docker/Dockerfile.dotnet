@@ -1,5 +1,10 @@
 FROM ubuntu:20.04
 
+ARG UID=1000
+ARG USER=dev
+
+RUN useradd -m ${USER} --uid=${UID}
+
 RUN apt-get update \
  && apt-get install -y wget curl \
  && apt-get install -y libfontconfig1 libxrender1 libxtst6 libxi6 libsecret-1-0 gnome-keyring \
@@ -16,8 +21,12 @@ RUN wget https://dot.net/v1/dotnet-install.sh \
 
 RUN dotnet dev-certs https
 
+USER $USER
+
+RUN dotnet tool install -g JetBrains.ReSharper.GlobalTools
+
 WORKDIR /src
 
 EXPOSE 5000
 
-CMD ["/bin/sh"]
+CMD ["/bin/bash"]
