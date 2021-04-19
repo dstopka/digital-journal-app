@@ -1,0 +1,58 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            parallel {
+                stage('Build API') {
+                    steps {
+                        sh './install api --build'
+                    }
+                    post {
+                        failure {
+                            echo('Building API failed. See logs for more details.')
+                        }
+                    }
+                }
+                stage('Build UI') {
+                    steps {
+                            sh './install ui --build'
+                    }
+                    post {
+                        failure {
+                            echo('Building UI failed. See logs for more details.')
+                        }
+                    }
+                }
+            }
+        }
+        stage('Unit tests') {
+            parallel {
+                stage('API tests') {
+                    steps {
+                        sh './install api --test'
+                    }
+                    post {
+                        failure {
+                            echo('API unit tests failed. See logs for more details.')
+                        }
+                    }
+                }
+                stage('UI tests') {
+                    steps {
+                            sh './install ui --test'
+                    }
+                    post {
+                        failure {
+                            echo('UI unit tests failed. See logs for more details.')
+                        }
+                    }
+                }
+            }      
+        }
+    }
+    post {
+        always {
+           sh 'docker system prune -f'
+        }
+    }
+}
