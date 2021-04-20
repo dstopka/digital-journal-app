@@ -21,7 +21,7 @@ services:
     container_name: journalapp_ui
     restart: always
     ports:
-      - 8888:80
+      - 80:80
     depends_on:
       - journalapp-api
   journal-mongo:

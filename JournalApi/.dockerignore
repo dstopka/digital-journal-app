@@ -1,0 +1,6 @@
+.idea
+JournalApi/bin
+JournalApi/obj
+Test/bin
+Test/obj
+inspect.xml
