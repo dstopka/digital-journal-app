@@ -70,7 +70,7 @@ build() {
             step "BUILDING ${DOTNET_IMAGE}"
 
             set -x
-            time docker build -f ${DOCKERFILE_DOTNET} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${DOTNET_IMAGE} .
+            time docker build -f ${DOCKERFILE_DOTNET} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${DOTNET_IMAGE} .docker
             rc=$?
             set +x
             ;;
@@ -78,7 +78,7 @@ build() {
             step "Building ${NODE_IMAGE}"
 
             set -x
-            time docker build -f ${DOCKERFILE_NODE} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${NODE_IMAGE} .
+            time docker build -f ${DOCKERFILE_NODE} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${NODE_IMAGE} .docker
             rc=$?
             set +x
             ;;

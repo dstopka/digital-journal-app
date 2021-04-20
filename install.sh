@@ -196,7 +196,7 @@ test() {
 usage_deploy() {
     cat << EOF
 
-USAGE: $0 deploy [--dev|--build|--release|-h|--help]
+USAGE: $0 deploy [[--dev]|--build|--release|-h|--help]
 
     Deploy project using docker-compose.
 
