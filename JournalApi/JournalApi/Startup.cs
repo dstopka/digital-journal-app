@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace JournalApi
 {
@@ -25,7 +26,22 @@ namespace JournalApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            var config = new ServerConfig();
+            Configuration.Bind(config);
+
+            services.AddCors();
+            
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "JournalApp API",
+                    Version = "v1",
+                    Description = "Digital Journal App API",
+                });
+            });
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,11 +52,19 @@ namespace JournalApi
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(builder => builder
+                       .AllowAnyOrigin()
+                       .AllowAnyMethod());
             app.UseAuthorization();
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "JournalApp API V1");
+            });
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
