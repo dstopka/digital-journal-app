@@ -112,7 +112,7 @@ _code_inspect() {
 
     step "RUNNING DOTNET CODE INSPECTION"
     set -x
-    time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} bash -c '$HOME/.dotnet/tools/jb inspectcode JournalApi.sln -o=inspect.xml'
+    time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} bash -c '$HOME/.dotnet/tools/jb inspectcode JournalApi.sln -o=reports/inspect.xml'
     rc=$?
     set +x
 
@@ -366,6 +366,7 @@ USAGE: $0 api [[--build]|--test|--inspect|-h|--help]
     --build             Build API code. This is a default option.
     --test              Run tests on API code.
     --inspect           Run code inspection on API project.
+    --coverage          Run code coverage on API project.
     -h, --help          Print help.
 
 EOF
@@ -391,6 +392,15 @@ api() {
             --inspect)
                 _code_inspect
                 [ $? -ne 0 ] && return 1
+                ;;
+            --coverage)
+                step "RUNNING DOTNET CODE COVERAGE"
+                set -x
+                time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} bash -c '$HOME/.dotnet/tools/dotnet-dotcover test --dcXML=/src/coverage.xml'
+                local rc=$?
+                set +x
+                [ $rc -ne 0 ] && return 1
+                "$BROWSER" "${SCRIPT_DIR}/JournalApi/reports/coverageReport.html"
                 ;;
             *)
                 echo "Unexpected argument $1!"

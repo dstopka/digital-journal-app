@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AnalyseParams>
+    <WorkingDir>.</WorkingDir>
+    <Arguments>Test/bin/Debug/netcoreapp3.1/Test.dll</Arguments>
+    <Output>reports/coverageReport.html</Output>
+    <ReportType>HTML</ReportType>
+    <Filters>
+        <IncludeFilters>
+            <FilterEntry>
+                <ModuleMask>JournalApi</ModuleMask>
+            </FilterEntry>
+        </IncludeFilters>
+        <ExcludeFilters>
+        </ExcludeFilters>
+    </Filters>
+    <AttributeFilters>
+        <AttributeFilterEntry>
+            <ClassMask>System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</ClassMask>
+        </AttributeFilterEntry>
+    </AttributeFilters>
+</AnalyseParams>
