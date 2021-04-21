@@ -4,4 +4,4 @@
 **/*.sln.DotSettings.user
 **/bin
 **/obj
-**/inspect.xml
+**/reports

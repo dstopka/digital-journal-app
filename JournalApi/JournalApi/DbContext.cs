@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace JournalApi
 {
+    [ExcludeFromCodeCoverage]
     public class DbContext
     {
         public string Database { get; set; } = null!;

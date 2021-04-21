@@ -24,6 +24,7 @@ RUN dotnet dev-certs https
 USER $USER
 
 RUN dotnet tool install -g JetBrains.ReSharper.GlobalTools
+RUN dotnet tool install -g JetBrains.dotCover.GlobalTool
 
 WORKDIR /src
 
