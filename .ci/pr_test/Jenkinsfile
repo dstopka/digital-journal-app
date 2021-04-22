@@ -2,11 +2,12 @@ pipeline {
     agent any
     environment {
         INSTALL = "$WORKSPACE/install.sh"
+        ENV = "$WORKSPACE/env.sh"
     }
     stages {
         stage("Env") {
             steps {
-                sh 'chmod 755 $INSTALL'
+                sh 'chmod 755 $INSTALL $ENV'
             }
         }
         stage('Build') {
