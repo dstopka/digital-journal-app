@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        INSTALL = '"$WORKSPACE"/install.sh'
+        INSTALL = "$WORKSPACE/install.sh"
     }
     stages {
         stage("Env") {
