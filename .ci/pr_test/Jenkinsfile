@@ -1,11 +1,20 @@
 pipeline {
     agent any
+    environment {
+        INSTALL = "$WORKSPACE/install.sh"
+        ENV = "$WORKSPACE/env.sh"
+    }
     stages {
+        stage("Env") {
+            steps {
+                sh 'chmod 755 $INSTALL $ENV'
+            }
+        }
         stage('Build') {
             parallel {
                 stage('Build API') {
                     steps {
-                        sh './install api --build'
+                        sh '$INSTALL api --build'
                     }
                     post {
                         failure {
@@ -15,7 +24,7 @@ pipeline {
                 }
                 stage('Build UI') {
                     steps {
-                            sh './install ui --build'
+                            sh '$INSTALL ui --build'
                     }
                     post {
                         failure {
@@ -29,7 +38,7 @@ pipeline {
             parallel {
                 stage('API tests') {
                     steps {
-                        sh './install api --test'
+                        sh '$INSTALL api --test'
                     }
                     post {
                         failure {
@@ -39,7 +48,7 @@ pipeline {
                 }
                 stage('UI tests') {
                     steps {
-                            sh './install ui --test'
+                            sh '$INSTALL ui --test'
                     }
                     post {
                         failure {
