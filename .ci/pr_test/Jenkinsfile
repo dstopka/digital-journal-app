@@ -5,7 +5,7 @@ pipeline {
             parallel {
                 stage('Build API') {
                     steps {
-                        sh '"$WORKSPACE"/install api --build'
+                        sh '"$WORKSPACE"/install.sh api --build'
                     }
                     post {
                         failure {
@@ -15,7 +15,7 @@ pipeline {
                 }
                 stage('Build UI') {
                     steps {
-                            sh '"$WORKSPACE"/install ui --build'
+                            sh '"$WORKSPACE"/install.sh ui --build'
                     }
                     post {
                         failure {
@@ -29,7 +29,7 @@ pipeline {
             parallel {
                 stage('API tests') {
                     steps {
-                        sh '"$WORKSPACE"/install api --test'
+                        sh '"$WORKSPACE"/install.sh api --test'
                     }
                     post {
                         failure {
@@ -39,7 +39,7 @@ pipeline {
                 }
                 stage('UI tests') {
                     steps {
-                            sh '"$WORKSPACE"./install ui --test'
+                            sh '"$WORKSPACE"./install.sh ui --test'
                     }
                     post {
                         failure {
