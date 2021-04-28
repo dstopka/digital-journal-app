@@ -18,6 +18,18 @@ step() {
     echo -e "\n\033[31m${line}${step}${line}\033[0m\n"
 }
 
+check_node_modules() {
+    local rc=0
+    if [ ! -d "JournalApp/node_modules" ]; then
+        set -x
+        time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} npm install
+        rc=$?
+        set +x
+    fi
+
+    return $rc
+}
+
 usage_main() {
     cat << EOF
 
@@ -56,6 +68,9 @@ _build_code() {
             [ $? -ne 0 ] && ./env.sh build --node
 
             step "BUILDING UI"
+            check_node_modules
+            [ $? -ne 0 ] && return 1
+
             set -x
             time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} ng build
             rc=$?
@@ -88,6 +103,9 @@ _run_unit_tests() {
             [ $? -ne 0 ] && ./env.sh build --node
 
             step "RUNNING UI UNIT TESTS"
+            check_node_modules
+            [ $? -ne 0 ] && return 1
+
             set -x
             time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} ng test --no-watch --no-progress --browsers=ChromeHeadlessCI
             rc=$?
@@ -173,7 +191,7 @@ EOF
 test() {
     case "$1" in
         -h|--help)
-            usage_build
+            usage_test
             return $?
             ;;
         "")
@@ -219,7 +237,7 @@ deploy() {
 
     case ${option} in
         -h|--help)
-            usage_build
+            usage_deploy
             return $?
             ;;
 #        --release)
