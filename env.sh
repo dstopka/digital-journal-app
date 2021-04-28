@@ -3,7 +3,6 @@
 NODE_IMAGE="node_env"
 DOTNET_IMAGE="dotnet_env"
 BASE_DIR=$(dirname $(realpath "$0"))
-DOCKER_COMMON_OPTIONS="--rm -ti -v ${BASE_DIR}/JournalApi:/src"
 DOCKERFILE_DOTNET=".docker/Dockerfile.dotnet"
 DOCKERFILE_NODE=".docker/Dockerfile.node"
 
@@ -130,7 +129,7 @@ run() {
 
             step "STARTING ${DOTNET_IMAGE}"
             set -x
-            docker run ${DOCKER_COMMON_OPTIONS} ${DOTNET_IMAGE}
+            docker run --rm -ti -v ${BASE_DIR}/JournalApi:/src ${DOTNET_IMAGE}
             rc=$?
             set +x
             ;;
@@ -140,7 +139,7 @@ run() {
 
             step "STARTING ${NODE_IMAGE}"
             set -x
-            docker run ${DOCKER_COMMON_OPTIONS} ${NODE_IMAGE}
+            docker run --rm -ti -v ${BASE_DIR}/JournalApp:/src ${NODE_IMAGE}
             rc=$?
             set +x
             ;;
