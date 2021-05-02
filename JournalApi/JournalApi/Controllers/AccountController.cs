@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
+using System.Linq;
 using BC = BCrypt.Net.BCrypt;
 using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
 using JournalApi.Models;
 using JournalApi.Services.Abstract;
+using JournalApi.Responses;
 
 namespace JournalApi.Controllers
 {
@@ -26,13 +28,17 @@ namespace JournalApi.Controllers
         {
             if(!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new RegistrationResponseDto{ 
+                        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage)) 
+                    });
             }
 
             var isEmailFree = await _userService.IsEmailFree(userForRegistrationDto?.Email!);
             if(!isEmailFree)
             {
-                return BadRequest("Email is linked with an existing account");
+                return BadRequest(new RegistrationResponseDto{ 
+                        Errors = new string[]{"Email is linked with an existing account"}
+                    });
             }
 
             var user = _mapper.Map<User>(userForRegistrationDto);
