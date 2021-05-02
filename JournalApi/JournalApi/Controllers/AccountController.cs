@@ -17,7 +17,7 @@ namespace JournalApi.Controllers
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public AccountController(IMapper mapper, IUserService userService) 
+        public AccountController(IMapper mapper, IUserService userService)
         {
             _mapper = mapper;
             _userService = userService;
@@ -26,19 +26,21 @@ namespace JournalApi.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterUser([FromBody] UserForRegistrationDto userForRegistrationDto)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return BadRequest(new RegistrationResponseDto{ 
-                        Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage)) 
-                    });
+                return BadRequest(new RegistrationResponseDto
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage))
+                });
             }
 
             var isEmailFree = await _userService.IsEmailFree(userForRegistrationDto?.Email!);
-            if(!isEmailFree)
+            if (!isEmailFree)
             {
-                return BadRequest(new RegistrationResponseDto{ 
-                        Errors = new string[]{"Email is linked with an existing account"}
-                    });
+                return BadRequest(new RegistrationResponseDto
+                {
+                    Errors = new string[] { "Email is linked with an existing account" }
+                });
             }
 
             var user = _mapper.Map<User>(userForRegistrationDto);
@@ -53,19 +55,22 @@ namespace JournalApi.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserForAuthenticationDto userForAuthentication)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new AuthResponseDto
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage))
+                });
             }
 
-            var user = await _userService.GetUser(userForAuthentication?.Email!);
+            var response = await _userService.Authenticate(userForAuthentication);
 
-            if(user == null || !BC.Verify(userForAuthentication?.Password!, user.Password))
+            if(!response.IsSuccessful)
             {
-                return Unauthorized("Invalid email or password");
+                return BadRequest(response);
             }
-
-            return Ok();
+            
+            return Ok(response);
         }
     }
 }
