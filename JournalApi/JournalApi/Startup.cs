@@ -13,6 +13,7 @@ using AutoMapper;
 using JournalApi.Database;
 using JournalApi.Services.Abstract;
 using JournalApi.Services;
+using JournalApi.Helpers;
 
 namespace JournalApi
 {
@@ -29,6 +30,7 @@ namespace JournalApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
             services.Configure<DbConfig>(Configuration.GetSection(nameof(DbConfig)));
             services.AddSingleton<IDbConfig>(sp => sp.GetRequiredService<IOptions<DbConfig>>().Value);
 
@@ -37,7 +39,7 @@ namespace JournalApi
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddCors();
-            
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -65,7 +67,8 @@ namespace JournalApi
             app.UseCors(builder => builder
                        .AllowAnyOrigin()
                        .AllowAnyMethod());
-            app.UseAuthorization();
+            
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
