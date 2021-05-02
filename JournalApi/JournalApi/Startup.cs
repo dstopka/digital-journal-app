@@ -1,17 +1,18 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
+using AutoMapper;
+
+using JournalApi.Database;
+using JournalApi.Services.Abstract;
+using JournalApi.Services;
 
 namespace JournalApi
 {
@@ -28,8 +29,12 @@ namespace JournalApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var config = new ServerConfig();
-            Configuration.Bind(config);
+            services.Configure<DbConfig>(Configuration.GetSection(nameof(DbConfig)));
+            services.AddSingleton<IDbConfig>(sp => sp.GetRequiredService<IOptions<DbConfig>>().Value);
+
+            services.AddTransient<IUserService, UserService>();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddCors();
             
@@ -39,7 +44,7 @@ namespace JournalApi
                 {
                     Title = "JournalApp API",
                     Version = "v1",
-                    Description = "Digital Journal App API",
+                    Description = "Digital Journal App API"
                 });
             });
 
@@ -54,7 +59,7 @@ namespace JournalApi
                 app.UseDeveloperExceptionPage();
             }
 
-           // app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
             app.UseCors(builder => builder
