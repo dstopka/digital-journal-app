@@ -67,7 +67,7 @@ namespace JournalApi.Controllers
 
             if(!response.IsSuccessful)
             {
-                return BadRequest(response);
+                return Unauthorized(response);
             }
             
             return Ok(response);

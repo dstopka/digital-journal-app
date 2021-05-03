@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { UserForRegistrationDto } from '../../models/user/userForRegistrationDto';
 import { AuthenticationService } from '../../services/authentication.service';
 
@@ -13,7 +14,7 @@ export class RegisterUserComponent implements OnInit {
   public errorMessage: string = "";
   public showError!: boolean;
 
-  constructor(private _authService: AuthenticationService) {
+  constructor(private _authService: AuthenticationService, private _router: Router) {
    }
 
   ngOnInit(): void {
@@ -46,7 +47,7 @@ export class RegisterUserComponent implements OnInit {
     };
     this._authService.registerUser("register", user)
     .subscribe(_ => {
-      console.log("Successful registration");
+      this._router.navigate(["/authentication/login"])
     },
     error => {
       this.errorMessage = error;
