@@ -28,6 +28,9 @@ export class ErrorHandlerService implements HttpInterceptor {
     else if(error.status === 400){
       return this.handleBadRequest(error);
     }
+    else if(error.status === 401){
+      return this.handleUnauthorized(error);
+    }
     return "";
   }
   
@@ -37,17 +40,36 @@ export class ErrorHandlerService implements HttpInterceptor {
   }
   
   private handleBadRequest = (error: HttpErrorResponse): string => {
-    if(this._router.url === '/authentication/register'){
-      let message = '';
-      const values = Object.values(error.error.errors);
+    switch(this._router.url){
+      case '/authentication/register':
+      case '/authentication/login': {
+        return this.parseErrors(error.error.errors);
+      }
+      default: {
+        return error.error ? error.error : error.message;
+      }
+    }
+  }
+
+  private handleUnauthorized = (error: HttpErrorResponse): string => {
+    switch(this._router.url){
+      case '/authentication/login': {
+        return `Authentication failed. ${error.error.errors}`;
+      }
+      default: {
+        this._router.navigate(['/authenticate/login']);
+        return error.message;
+      }
+    }
+  }
+
+  private parseErrors = (errors: string[]): string => {
+    let message = '';
+      const values = Object.values(errors);
       values.map((msg) => {
          message += msg + '<br>';
       })
       return message.slice(0, -4);
-    }
-    else {
-      return error.error ? error.error : error.message;
-    } 
   }
 
 }
