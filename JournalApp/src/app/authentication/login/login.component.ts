@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { JwtHelperService } from '@auth0/angular-jwt';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserForRegistrationDto } from '../../models/user/userForRegistrationDto';
 import { AuthenticationService } from '../../services/authentication.service';
 import { UserForAuthenticationDto } from 'src/app/models/user/userForAuthenticationDto';
 
@@ -14,16 +14,15 @@ export class LoginComponent implements OnInit {
   public loginForm!: FormGroup;
   public errorMessage: string = '';
   public showError!: boolean;
-  private _returnUrl!: string;
 
-  constructor(private _authService: AuthenticationService, private _router: Router, private _route: ActivatedRoute) { }
+  constructor(private _authService: AuthenticationService, private _router: Router,
+    private _route: ActivatedRoute, private _jwtHelper: JwtHelperService) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
       username: new FormControl("", [Validators.required]),
       password: new FormControl("", [Validators.required])
     })
-    this._returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
   }
 
   public validateControl = (controlName: string) => {
@@ -45,15 +44,20 @@ export class LoginComponent implements OnInit {
 
     this._authService.loginUser('login', userForAuth)
       .subscribe(res => {
-        localStorage.setItem("token", res.token);
-        localStorage.setItem("id", res.id.toString());
-        this._authService.sendAuthStateChangeNotification(res.isSuccessful);
-        this._router.navigate([this._returnUrl]);
+        this.onLogin(res.token, res.isSuccessful);
+        
+        const redirectUrl = this._authService.redirectUrl || '/';
+        this._router.navigate([redirectUrl]);
       },
         (error) => {
           this.errorMessage = error;
           this.showError = true;
         })
+  }
+
+  private onLogin = (token: string, isSuccessful: boolean) => {
+    localStorage.setItem("token", token);
+    this._authService.sendAuthStateChangeNotification(isSuccessful);
   }
 
 
