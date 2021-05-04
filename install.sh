@@ -20,9 +20,9 @@ step() {
 
 check_node_modules() {
     local rc=0
-    if [ ! -d "JournalApp/node_modules" ]; then
+    if [ "JournalApp/package.json" -nt "JournalApp/node_modules" ]; then
         set -x
-        time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} npm install
+        time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} sh -c 'npm install && touch node_modules'
         rc=$?
         set +x
     fi
@@ -72,7 +72,7 @@ _build_code() {
             [ $? -ne 0 ] && return 1
 
             set -x
-            time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} ng build
+            time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} npm run build
             rc=$?
             set +x
             ;;
@@ -233,6 +233,7 @@ EOF
 
 deploy() {
     local option=${1:---dev}
+    shift
     local rc=
 
     case ${option} in
@@ -249,7 +250,8 @@ deploy() {
             clean
             step "BUILD AND DEPLOY"
             set -x
-            docker-compose -f ./.docker/docker-compose-dev.yaml up -d --build
+            docker-compose -f ./.docker/docker-compose-dev.yaml build $@ \
+                    && docker-compose -f ./.docker/docker-compose-dev.yaml up -d
             rc=$?
             set +x
             ;;
@@ -267,6 +269,9 @@ deploy() {
             return 1
             ;;
     esac
+
+    local deployment_ip=$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' journalapp_ui)
+    echo "You can access website in your browser at $deployment_ip"
 
     return $rc
 }
@@ -414,7 +419,7 @@ api() {
             --coverage)
                 step "RUNNING DOTNET CODE COVERAGE"
                 set -x
-                time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} bash -c '$HOME/.dotnet/tools/dotnet-dotcover test --dcXML=/src/coverage.xml'
+                time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} bash -c '$HOME/.dotnet/tools/dotnet-dotcover test --dcXML=/src/reports/coverage.xml'
                 local rc=$?
                 set +x
                 [ $rc -ne 0 ] && return 1
