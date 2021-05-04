@@ -129,7 +129,7 @@ run() {
 
             step "STARTING ${DOTNET_IMAGE}"
             set -x
-            docker run --rm -ti -v ${BASE_DIR}/JournalApi:/src ${DOTNET_IMAGE}
+            docker run --rm -ti -p 5000:5000 -v ${BASE_DIR}/JournalApi:/src ${DOTNET_IMAGE}
             rc=$?
             set +x
             ;;
@@ -139,7 +139,7 @@ run() {
 
             step "STARTING ${NODE_IMAGE}"
             set -x
-            docker run --rm -ti -v ${BASE_DIR}/JournalApp:/src ${NODE_IMAGE}
+            docker run --rm -ti -p 4200:4200 -v ${BASE_DIR}/JournalApp:/src ${NODE_IMAGE}
             rc=$?
             set +x
             ;;
