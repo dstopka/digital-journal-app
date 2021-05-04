@@ -68,15 +68,13 @@ namespace JournalApi.Services
                 return new AuthResponseDto{Errors = new string[] { "Invalid email or password" }};
             }
 
-            // authentication successful so generate jwt token
             var token = generateJwtToken(user);
 
-            return new AuthResponseDto{IsSuccessful = true, Id = user.UserId, Token = token};
+            return new AuthResponseDto{IsSuccessful = true, Token = token};
         }
 
         private string generateJwtToken(User user)
         {
-            // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings?.Secret!);
             var tokenDescriptor = new SecurityTokenDescriptor
