@@ -3,8 +3,8 @@
 NODE_IMAGE="node_env"
 DOTNET_IMAGE="dotnet_env"
 BASE_DIR=$(dirname $(realpath "$0"))
-DOCKERFILE_DOTNET=".docker/Dockerfile.dotnet"
-DOCKERFILE_NODE=".docker/Dockerfile.node"
+DOCKERFILE_DOTNET="${BASE_DIR}/.docker/Dockerfile.dotnet"
+DOCKERFILE_NODE="${BASE_DIR}/.docker/Dockerfile.node"
 
 check_image() {
     [[ "$(docker images -q $1 2> /dev/null)" == "" ]] && return 1
@@ -69,7 +69,8 @@ build() {
             step "BUILDING ${DOTNET_IMAGE}"
 
             set -x
-            time docker build -f ${DOCKERFILE_DOTNET} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${DOTNET_IMAGE} .docker
+            time docker build -f ${DOCKERFILE_DOTNET} --build-arg USER=${USER} \
+                        --build-arg UID=$(id -u) -t ${DOTNET_IMAGE} ${BASE_DIR}/.docker
             rc=$?
             set +x
             ;;
@@ -77,7 +78,8 @@ build() {
             step "Building ${NODE_IMAGE}"
 
             set -x
-            time docker build -f ${DOCKERFILE_NODE} --build-arg USER=${USER} --build-arg UID=$(id -u) -t ${NODE_IMAGE} .docker
+            time docker build -f ${DOCKERFILE_NODE} --build-arg USER=${USER} \
+                        --build-arg UID=$(id -u) -t ${NODE_IMAGE} ${BASE_DIR}/.docker
             rc=$?
             set +x
             ;;
@@ -129,7 +131,7 @@ run() {
 
             step "STARTING ${DOTNET_IMAGE}"
             set -x
-            docker run --rm -ti -p 5000:5000 -v ${BASE_DIR}/JournalApi:/src ${DOTNET_IMAGE}
+            docker run --rm -ti -v ${BASE_DIR}/JournalApi:/src ${DOTNET_IMAGE}
             rc=$?
             set +x
             ;;
@@ -139,7 +141,7 @@ run() {
 
             step "STARTING ${NODE_IMAGE}"
             set -x
-            docker run --rm -ti -p 4200:4200 -v ${BASE_DIR}/JournalApp:/src ${NODE_IMAGE}
+            docker run --rm -ti -v ${BASE_DIR}/JournalApp:/src ${NODE_IMAGE}
             rc=$?
             set +x
             ;;
