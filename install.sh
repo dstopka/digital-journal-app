@@ -51,23 +51,58 @@ EOF
 
 _build_code() {
     local rc=
+    local do_api=
+    local do_ui=
+    local do_production=
 
-    case "$1" in
-        api)
+    while [ $# != 0 ]; do
+        _option="$1"
+        case ${_option} in
+            api)
+                do_api=true
+                ;;
+            ui)
+                do_ui=true
+                ;;
+            --prod)
+                do_production=true
+                ;;
+        esac
+        shift
+    done
+
+    if [[ -n ${do_api} ]]; then
+        step "BUILDING API"
+        if [[ -n ${do_production} ]]; then
+            set -x
+            time docker build -f $SCRIPT_DIR/.docker/Dockerfile.api -t journalapp_api $SCRIPT_DIR/JournalApi
+            rc=$?
+            set +x
+        else
             check_image ${DOTNET_IMAGE}
             [ $? -ne 0 ] && ./env.sh build --dotnet
 
-            step "BUILDING API"
             set -x
             time docker run ${DOCKER_COMMON_OPTIONS_API} ${DOTNET_IMAGE} dotnet build
             rc=$?
+            set +x            
+        fi
+
+        [ $rc -ne 0 ] && return $rc
+    fi
+
+
+    if [[ -n ${do_api} ]]; then
+        step "BUILDING UI"
+        if [[ -n ${do_production} ]]; then
+            set -x
+            time docker build -f $SCRIPT_DIR/.docker/Dockerfile.ui -t journalapp_ui $SCRIPT_DIR/JournalApp
+            rc=$?
             set +x
-            ;;
-        ui)
+        else
             check_image ${NODE_IMAGE}
             [ $? -ne 0 ] && ./env.sh build --node
 
-            step "BUILDING UI"
             check_node_modules
             [ $? -ne 0 ] && return 1
 
@@ -75,11 +110,8 @@ _build_code() {
             time docker run ${DOCKER_COMMON_OPTIONS_UI} ${NODE_IMAGE} npm run build
             rc=$?
             set +x
-            ;;
-        *)
-            return 1
-            ;;
-    esac
+        fi
+    fi
 
     return $rc
 }
@@ -140,29 +172,36 @@ _code_inspect() {
 usage_build() {
     cat << EOF
 
-USAGE: $0 build [-h|--help]
+USAGE: $0 build [[--dev]|--prod|-h|--help]
 
     Build whole project
 
     OPTIONS:
 
+    --dev:              Default. Build code in the container.
+    --prod:             Build production images
+                        for API and client.
     -h, --help:         Print help.
 
 EOF
 }
 
 build() {
-    case "$1" in
+    local option=${1:---dev}
+    local rc=
+
+    case "${option}" in
         -h|--help)
             usage_build
             return $?
             ;;
-        "")
-            _build_code api
-            [ $? -ne 0 ] && return 1
-
-            _build_code ui
-            [ $? -ne 0 ] && return 1
+        --dev)
+            _build_code api ui
+            rc=$?
+            ;;
+        --prod)
+            _build_code api ui --prod
+            rc=$?
             ;;
         *)
             echo "Unexpected argument $1!"
@@ -171,7 +210,7 @@ build() {
             ;;
     esac
 
-    return 0
+    return $rc
 }
 
 usage_test() {
@@ -249,9 +288,9 @@ deploy() {
         --build)
             clean
             step "BUILD AND DEPLOY"
+            _build_code api ui --prod
             set -x
-            docker-compose -f ./.docker/docker-compose-dev.yaml build $@ \
-                    && docker-compose -f ./.docker/docker-compose-dev.yaml up -d
+            docker-compose -f ./.docker/docker-compose-dev.yaml up -d
             rc=$?
             set +x
             ;;
@@ -347,7 +386,7 @@ EOF
 }
 
 ui() {
-    local option=${1:---build}
+    local _option=${1:---build}
 
     while [ $# != 0 ]; do
         case ${option} in
