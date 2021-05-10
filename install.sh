@@ -92,7 +92,7 @@ _build_code() {
     fi
 
 
-    if [[ -n ${do_api} ]]; then
+    if [[ -n ${do_ui} ]]; then
         step "BUILDING UI"
         if [[ -n ${do_production} ]]; then
             set -x
@@ -386,7 +386,7 @@ EOF
 }
 
 ui() {
-    local _option=${1:---build}
+    local option=${1:---build}
 
     while [ $# != 0 ]; do
         case ${option} in
