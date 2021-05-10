@@ -1,16 +1,34 @@
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { AppComponent } from './app.component';
+import { MenuComponent } from './menu/menu.component'
+import { ErrorHandlerService } from './services/error-handler.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
+        HttpClientModule,
         RouterTestingModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        MenuComponent
       ],
+      providers: [
+        {
+          provide: HTTP_INTERCEPTORS,
+          useClass: ErrorHandlerService,
+          multi: true
+        },
+        { 
+          provide: JWT_OPTIONS, 
+          useValue: JWT_OPTIONS 
+        },
+        JwtHelperService
+      ]
     }).compileComponents();
   });
 
@@ -24,12 +42,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app.title).toEqual('JournalApp');
-  });
-
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('JournalApp app is running!');
   });
 });
