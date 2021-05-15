@@ -13,8 +13,6 @@ import { AuthResponseDto } from '../models/response/authResponseDto';
 export class AuthenticationService {
   private apiUrl: string;
   public redirectUrl!: string;
-  private _authChangeSub = new Subject<boolean>()
-  public authChanged = this._authChangeSub.asObservable();
 
   constructor(private _http: HttpClient, private _jwtHelper: JwtHelperService) {
     this.apiUrl = 'api/account/';
@@ -30,12 +28,6 @@ export class AuthenticationService {
 
   public logoutUser = () => {
     localStorage.removeItem("token");
-    localStorage.removeItem("id");
-    this.sendAuthStateChangeNotification(false);
-  }
-
-  public sendAuthStateChangeNotification = (isAuthenticated: boolean) => {
-    this._authChangeSub.next(isAuthenticated);
   }
 
   public isAuthenticated = () => {

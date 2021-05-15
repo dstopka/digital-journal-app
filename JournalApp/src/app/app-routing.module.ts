@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './authentication/auth.guard';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { NotFoundComponent } from './error-pages/not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
-import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
+  { path: '', component: HomeComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+  { path: '', loadChildren: () => import('./layout/layout.module').then(m => m.LayoutModule), canActivate: [AuthGuard] },
   { path: 'authentication', loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule) },
   { path: '404', component : NotFoundComponent},
-  { path: '', component: MainComponent, pathMatch: 'full' },
   { path: '**', redirectTo: '/404', pathMatch: 'full'}
 ];
 

@@ -1,1 +1,7 @@
-<p class="homeText">{{homeText}}</p> 
+<p class="homeText">{{homeText}}</p>
+<a class="nav-link" [routerLink]="['/authentication/login']" routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact: true}">Login</a>
+<a class="nav-link" [routerLink]="['/authentication/register']" routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact: true}">Sign Up</a>
+<a *ngIf='isAuthenticated' class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact: true}">Dashboard</a>

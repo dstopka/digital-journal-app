@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { Router } from '@angular/router';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AuthenticationService } from '../../services/authentication.service';
-import { UserForAuthenticationDto } from 'src/app/models/user/userForAuthenticationDto';
+import { AuthenticationService } from '../../shared/services/authentication.service';
+import { UserForAuthenticationDto } from 'src/app/shared/models/user/userForAuthenticationDto';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   public showError!: boolean;
 
   constructor(private _authService: AuthenticationService, private _router: Router,
-    private _route: ActivatedRoute, private _jwtHelper: JwtHelperService) { }
+    private _activeModal: NgbActiveModal) { }
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
@@ -46,8 +46,8 @@ export class LoginComponent implements OnInit {
       .subscribe(res => {
         this.onLogin(res.token, res.isSuccessful);
         
-        const redirectUrl = this._authService.redirectUrl || '/';
-        this._router.navigate([redirectUrl]);
+        this._router.navigate(['/dashboard']);
+        this.close();
       },
         (error) => {
           this.errorMessage = error;
@@ -57,8 +57,16 @@ export class LoginComponent implements OnInit {
 
   private onLogin = (token: string, isSuccessful: boolean) => {
     localStorage.setItem("token", token);
-    this._authService.sendAuthStateChangeNotification(isSuccessful);
+    // this._authService.sendAuthStateChangeNotification(isSuccessful);
   }
 
+  public closeRouteHome = () => {
+    this.close();
+    this._router.navigate(['/'])
+  }
+
+  private close = () => {
+    this._activeModal.close();
+  }
 
 }
