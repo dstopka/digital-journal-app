@@ -347,7 +347,6 @@ clean() {
                 step "ENVIRONMENT CLEANUP - SOFT"
                 docker-compose -f ./.docker/docker-compose-dev.yaml down
                 docker-compose -f ./.docker/docker-compose.yaml down
-                docker system prune -f
                 ;;
             --hard)
                 step "ENVIRONMENT CLEANUP - HARD"
