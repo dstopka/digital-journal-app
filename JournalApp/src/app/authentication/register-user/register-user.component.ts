@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserForRegistrationDto } from '../../models/user/userForRegistrationDto';
-import { AuthenticationService } from '../../services/authentication.service';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UserForRegistrationDto } from '../../shared/models/user/userForRegistrationDto';
+import { AuthenticationService } from '../../shared/services/authentication.service';
 
 @Component({
   selector: 'app-register-user',
@@ -14,7 +15,8 @@ export class RegisterUserComponent implements OnInit {
   public errorMessage: string = "";
   public showError!: boolean;
 
-  constructor(private _authService: AuthenticationService, private _router: Router) {
+  constructor(private _authService: AuthenticationService, private _router: Router,
+    private _activeModal: NgbActiveModal) {
    }
 
   ngOnInit(): void {
@@ -48,10 +50,20 @@ export class RegisterUserComponent implements OnInit {
     this._authService.registerUser("register", user)
     .subscribe(_ => {
       this._router.navigate(["/authentication/login"])
+      this.close();
     },
     error => {
       this.errorMessage = error;
       this.showError = true;
     })
+  }
+
+  public closeRouteHome = () => {
+    this.close();
+    this._router.navigate(['/'])
+  }
+
+  private close = () => {
+    this._activeModal.close();
   }
 }

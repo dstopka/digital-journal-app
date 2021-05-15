@@ -3,8 +3,8 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { JWT_OPTIONS, JwtHelperService } from '@auth0/angular-jwt';
 import { AppComponent } from './app.component';
-import { MenuComponent } from './menu/menu.component'
-import { ErrorHandlerService } from './services/error-handler.service';
+import { MenuComponent } from './layout/menu/menu.component'
+import { ErrorHandlerService } from './shared/services/error-handler.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
