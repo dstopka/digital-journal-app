@@ -11,7 +11,6 @@ import { AuthenticationService } from '../shared/services/authentication.service
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  public homeText!: string;
   private dialog!: NgbModalRef;
   public isAuthenticated!: boolean;
 
@@ -22,9 +21,7 @@ export class HomeComponent implements OnInit {
     this.createModal();
   }
 
-  ngOnInit(): void {
-    this.homeText = "WELCOME TO JOURNAL APP";
-  }
+  ngOnInit(): void { }
 
   private createModal = () => {
     const url = this._router.url;

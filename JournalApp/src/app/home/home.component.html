@@ -1,7 +1,111 @@
-<p class="homeText">{{homeText}}</p>
-<a class="nav-link" [routerLink]="['/authentication/login']" routerLinkActive="active"
-    [routerLinkActiveOptions]="{exact: true}">Login</a>
-<a class="nav-link" [routerLink]="['/authentication/register']" routerLinkActive="active"
-    [routerLinkActiveOptions]="{exact: true}">Sign Up</a>
-<a *ngIf='isAuthenticated' class="nav-link" [routerLink]="['/dashboard']" routerLinkActive="active"
-    [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+<section class="cover">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">Digital Journal</a>
+            <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link link-underline" href="#">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item link-underline">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item link-underline">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li *ngIf='isAuthenticated' class="nav-item">
+                        <a class="nav-link link-underline" [routerLink]="['/dashboard']" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+                    </li>
+                    <li *ngIf='!isAuthenticated' class="nav-item">
+                        <a class="nav-link link-underline" [routerLink]="['/authentication/register']"
+                            routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Sign up</a>
+                    </li>
+                    <li *ngIf='!isAuthenticated' class="nav-item">
+                        <a class="btn btn-swipe-lt" [routerLink]="['/authentication/login']" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{exact: true}">Login</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="jumbotron jumbotron-fluid">
+        <div class="container-fluid text-center text-light">
+            <h1 class="display-3">The best online journaling app</h1>
+            <p class="lead pb-5">Keep your memories & thoughts in one place.</p>
+            <p class="lead pb-4">Join Digital Journal now!</p>
+            <p><a class="btn btn-swipe-lt btn-lg" [routerLink]="['/authentication/register']" routerLinkActive="active"
+                    [routerLinkActiveOptions]="{exact: true}">Sign up &raquo;</a></p>
+        </div>
+    </header>
+</section>
+
+<section id="features" class="container mt-4">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <i class="bi bi-calendar-date bi-lg" role="img" aria-label="Calendar"></i>
+                <div class="card-body">
+                    <h4 class="card-title">Calendar</h4>
+                    <p class="card-text">
+                        Easily navigate between your all entries!
+                    </p>
+                </div>
+                <div class="card-footer py-4">
+                    <!-- <a href="#" class="btn btn-secondary">See portfolio &raquo;</a> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <i class="bi bi-journal-text bi-lg" role="img" aria-label="Notes"></i>
+                <div class="card-body">
+                    <h4 class="card-title">Notes</h4>
+                    <p class="card-text">
+                        Add notes with your memories using an intuitive text editor!
+                    </p>
+                </div>
+                <div class="card-footer py-4">
+                    <!-- <a href="#" class="btn btn-secondary">See projects &raquo;</a> -->
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <i class="bi bi-graph-up bi-lg" role="img" aria-label="Statistics"></i>
+                <div class="card-body">
+                    <h4 class="card-title">Statistics</h4>
+                    <p class="card-text">
+                        Mark your days with tags and view the summary!
+                    </p>
+                </div>
+                <div class="card-footer py-4">
+                    <!-- <a href="#" class="btn btn-secondary">See testimonials &raquo;</a> -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container-fluid text-center py-4" id="contact">
+    <h2 class="display-4 pb-4 my-4">Get in touch with us!</h2>
+    <p>
+        <a class="btn btn-swipe-dark btn-lg mr-1"><i class="bi bi-github"></i> dstopka</a>
+        <a class="btn btn-swipe-dark btn-lg ml-1"><i class="bi bi-github"></i> aochab</a>
+    </p>
+</section>
+
+<footer class="py-3 bg-light">
+    <div class="container">
+        <p class="text-center">Copyright &copy; Dariusz Stopka & Adrian Ochab</p>
+    </div>
+</footer>
