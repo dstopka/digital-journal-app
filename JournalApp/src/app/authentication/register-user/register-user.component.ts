@@ -63,7 +63,7 @@ export class RegisterUserComponent implements OnInit {
       lastName: formValues.lastName,
       email: formValues.email,
       password: formValues.password,
-      passwordConfirmation: formValues.confirm
+      passwordConfirmation: formValues.confirmPassword
     };
 
     this._authService.registerUser("register", user)
