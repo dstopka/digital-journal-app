@@ -1,0 +1,68 @@
+@import '../../styles.scss';
+
+.ng-valid[required],
+.ng-valid.required {
+    border-left: 5px solid #42a948;
+}
+
+.ng-invalid:not(form).ng-touched {
+    border-left: 5px solid #a94442;
+}
+
+.text-invalid {
+    color: #a94442;
+    font-size: 0.75rem;
+}
+
+.text-valid {
+    color: #42a948;
+    font-size: 0.75rem;
+}
+
+.text {
+    color: color(light, contrasting);
+    font-size: 0.75rem;
+}
+
+.modal-content {
+    background-color: color(light, bg-primary);
+    color: color(light, contrasting);
+}
+
+.form-control {
+    background-color: color(light, bg-secondary);
+    color: color(light, contrasting);
+    border-color: color(light, bg-tertiary);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: color(light, bg-tertiary);
+}
+
+.btn-submit {
+    background-color: color(light, interactive-primary);
+    color: color(light, bg-primary);
+
+    -webkit-transition: 0.6s ease-out;
+    transition: 0.6s ease-out;
+
+    &:disabled {
+        opacity: .65;
+    }
+
+    &:hover:not([disabled]) {
+        background-color: color(light, interactive-secondary);
+    }
+}
+
+.nav-link {
+    padding: 0.5rem 0.3rem;
+    font-size: 1.1rem;
+}
+
+a {
+    &.nav-link {
+        color: color(light, interactive-primary);
+    }
+}

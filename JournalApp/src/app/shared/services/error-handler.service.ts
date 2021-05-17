@@ -54,7 +54,7 @@ export class ErrorHandlerService implements HttpInterceptor {
   private handleUnauthorized = (error: HttpErrorResponse): string => {
     switch(this._router.url){
       case '/authentication/login': {
-        return `Authentication failed. ${error.error.errors}`;
+        return `${error.error.errors}`;
       }
       default: {
         this._router.navigate(['/authenticate/login']);

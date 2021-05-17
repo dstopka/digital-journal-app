@@ -1,59 +1,63 @@
-<div class="modal-header">
-    <h4 class="modal-title">Login</h4>
-    <button type="button" class="close" aria-label="Close" (click)="closeRouteHome()">
+<div class="modal-header text-center d-block">
+    <button type="button" class="close" aria-label="Close" (click)="closeRoute('/')">
         <span aria-hidden="true">&times;</span>
     </button>
+    <h4 class="modal-title">Sign up</h4>
 </div>
 <div class="modal-body">
     <div *ngIf="showError" class="alert alert-danger" role="alert">
         {{errorMessage}}
     </div>
     <form [formGroup]="registerForm" autocomplete="off" novalidate (ngSubmit)="registerUser(registerForm.value)">
-        <div class="form-group row">
-            <label for="firstName" class="col-form-label col-sm-2">First Name:</label>
-            <div class="col-md-5">
-                <input type="text" id="firstName" formControlName="firstName" class="form-control" />
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" formControlName="firstName" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" formControlName="lastName" class="form-control" required />
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" formControlName="email" class="form-control" required />
+            <div *ngIf="validateTouched('email') && hasError('email', 'email')" class="text-invalid">
+                Provide a valid email
             </div>
         </div>
-        <div class="form-group row">
-            <label for="lastName" class="col-form-label col-sm-2">Last Name:</label>
-            <div class="col-md-5">
-                <input type="text" id="lastName" formControlName="lastName" class="form-control" />
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" formControlName="password" class="form-control" required />
+            <div *ngIf="validateDirty('password')" >
+                <div class="text">Password must include:</div>
+                <div [ngClass]="[checkPasswordRequirement('length')]">8-20 characters</div>
+                <div [ngClass]="[checkPasswordRequirement('capital')]">At least one capital letter</div>
+                <div [ngClass]="[checkPasswordRequirement('number')]">At least one number</div>
             </div>
         </div>
-        <div class="form-group row">
-            <label for="email" class="col-form-label col-sm-2">Email:</label>
-            <div class="col-md-5">
-                <input type="email" id="email" formControlName="email" class="form-control" />
-            </div>
-            <div class="col-md-5">
-                <em *ngIf="validateControl('email') && hasError('email', 'email')">Please provide a valid email</em>
-                <em *ngIf="validateControl('email') && hasError('email', 'required')">Email is required</em>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="password" class="col-form-label col-sm-2">Password:</label>
-            <div class="col-md-5">
-                <input type="password" id="password" formControlName="password" class="form-control" />
-            </div>
-            <div class="col-md-5">
-                <em *ngIf="validateControl('password') && hasError('password', 'required')">Password is required</em>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label for="confirm" class="col-form-label col-sm-2">Confirm Password:</label>
-            <div class="col-md-5">
-                <input type="password" id="confirm" formControlName="confirm" class="form-control" />
+        <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" formControlName="confirmPassword" class="form-control" required />
+            <div *ngIf="validateTouched('confirmPassword') && hasError('confirmPassword', 'mismatch')" class="text-invalid">
+                Passwords must be the same
             </div>
         </div>
         <br>
         <div class="form-group row">
-            <div class="col-md-1">
-                <button type="submit" class="btn btn-info" [disabled]="!registerForm.valid">Register</button>
+            <div class="col-md-12 text-center">
+                <button type="submit" class="btn btn-submit" [disabled]="!registerForm.valid">Register</button>
+            </div>
+        </div>
+        <div class="form-group row align-items-center justify-content-center">
+            <div class="col-md-7 p-0">
+                <div class="nav-link text-right">Already have an account?</div>
+            </div>
+            <div class="col-md-4 p-0">
+                <a class="nav-link" [routerLink]="" routerLinkActive="active"
+                [routerLinkActiveOptions]="{exact: true}" (click)="closeRoute('/authentication/login')">Login.</a>
             </div>
         </div>
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="closeRouteHome()">Close</button>
+    <button type="button" class="btn btn-outline-dark" (click)="closeRoute('/')">Close</button>
 </div>
