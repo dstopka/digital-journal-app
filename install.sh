@@ -111,6 +111,8 @@ _build_code() {
             rc=$?
             set +x
         fi
+
+        [ $rc -ne 0 ] && return $rc
     fi
 
     return $rc

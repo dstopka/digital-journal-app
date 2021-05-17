@@ -51,7 +51,7 @@ EOF
 
 build() {
     local option=${1:--a}
-    local rc=
+    local rc=0
 
     case ${option} in
         -h|--help)
