@@ -8,7 +8,7 @@ import { UserForAuthenticationDto } from 'src/app/shared/models/user/userForAuth
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss', '../authentication.scss']
 })
 export class LoginComponent implements OnInit {
   public loginForm!: FormGroup;
@@ -20,7 +20,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl("", [Validators.required]),
+      email: new FormControl("", [Validators.required, Validators.email]),
       password: new FormControl("", [Validators.required])
     })
   }
@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
 
     const login = { ...loginFormValue };
     const userForAuth: UserForAuthenticationDto = {
-      email: login.username,
+      email: login.email,
       password: login.password
     }
 
@@ -60,9 +60,9 @@ export class LoginComponent implements OnInit {
     // this._authService.sendAuthStateChangeNotification(isSuccessful);
   }
 
-  public closeRouteHome = () => {
+  public closeRoute = (route: string) => {
     this.close();
-    this._router.navigate(['/'])
+    this._router.navigate([route])
   }
 
   private close = () => {
