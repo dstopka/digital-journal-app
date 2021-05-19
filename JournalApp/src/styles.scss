@@ -1,21 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
+@import "~angular-calendar/css/angular-calendar.css";
+
 $palettes: (
     light: (
         bg-primary: #f9f8f5,
         bg-secondary: #f1eeee,
         bg-tertiary: #bbb9b9,
         contrasting: #4e4e4e,
-        interactive-primary: #9bd0d3,
-        interactive-secondary: #72c4c9
+        interactive-primary: #80cfd3,
+        interactive-secondary: #65c4c9
     ),
     dark: (
         bg-primary: #4e4e4e,
         bg-secondary: #1f1f1f,
         bg-tertiary: #313131,
         contrasting: #f9f8f5,
-        interactive-primary: #cf7488
+        interactive-primary: #cf7488,
+        interactive-secondary: #d15e77
     )
 );
 
@@ -32,8 +35,8 @@ $palettes: (
     color: $color-primary;
     box-shadow: inset 0 0 0 0 $color-primary;
 
-    -webkit-transition: color 0.6s ease-out, box-shadow 0.6s ease-out!important;
-    transition: color 0.6s ease-out, box-shadow 0.6s ease-out!important;
+    -webkit-transition: color 0.6s ease-out, box-shadow 0.6s ease-out !important;
+    transition: color 0.6s ease-out, box-shadow 0.6s ease-out !important;
 
     &:hover {
         box-shadow: inset 400px 0 0 0 $color-primary;
@@ -44,3 +47,12 @@ $palettes: (
 * {
     font-family: 'Montserrat', sans-serif;
 }
+
+.bg-interactive-dark {
+    background-color: color(dark, interactive-primary) !important;
+}
+
+.cal-month-view .cal-day-cell.cal-today {
+    background-color: lighten(color(light, interactive-primary), 25%) !important;
+}
+

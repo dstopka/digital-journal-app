@@ -1,0 +1,42 @@
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+    <div class="cal-cell-top" style="cursor: pointer">
+        <span class="badge-important" *ngIf="day.badgeTotal > 0"><i class="bi bi-bookmark-star-fill bi-badge"></i></span>
+        <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cal-events" *ngIf="day.events.length > 0">
+        <div
+          class="cal-event bg-interactive-dark">
+        </div>
+      </div>
+</ng-template>
+
+<div class="row justify-content-center text-center">
+    <div class="col-md-1">
+        <div class="arrow-anim justify-content-end" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate">
+            <div class="arrow-sliding-left col-md-1 pr-1 pl-0" >
+                <div class="arrow-left arrow-light"></div>
+            </div>
+            <div class="arrow-sliding-left delay col-md-1 pr-0 pl-1">
+                <div class="arrow-left"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    </div>
+    <div class="col-md-1">
+        <div class="arrow-anim justify-content-start" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate">
+            <div class="arrow-sliding-right delay col-md-1 pl-0 pr-1">
+                <div class="arrow-right"></div>
+            </div>
+            <div class="arrow-sliding-right col-md-1 pl-1 pr-0">
+                <div class="arrow-right arrow-light"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [cellTemplate]="customCellTemplate"
+    (dayClicked)="dayClicked($event.day)">
+</mwl-calendar-month-view>
