@@ -1,14 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  startOfDay,
-  endOfDay,
-  subDays,
-  addDays,
-  endOfMonth,
-  addHours,
-} from 'date-fns';
-import { Subject } from 'rxjs';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
+import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
+import { entryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
+
+interface JournalEntryEvent extends CalendarEvent {
+  isImportant: boolean;
+}
 
 @Component({
   selector: 'dashboard-calendar',
@@ -21,31 +18,12 @@ export class CalendarComponent implements OnInit {
 
   viewDate: Date = new Date();
 
-  refresh: Subject<any> = new Subject();
+  journalEntryEvents: JournalEntryEvent[] = [];
 
-  events: CalendarEvent[] = [
-    {
-      start: subDays(startOfDay(new Date()), 1),
-      title: 'A 3 day event',
-    },
-    {
-      start: startOfDay(new Date()),
-      title: 'An event with no end date',
-    },
-    {
-      start: subDays(endOfMonth(new Date()), 3),
-      title: 'A long event that spans 2 months',
-    },
-    {
-      start: addHours(startOfDay(new Date()), 2),
-      title: 'A draggable and resizable event',
-    },
-  ];
-
-  constructor() { }
+  constructor(private _journalEntryService: JournalEntryService) { }
 
   ngOnInit(): void {
-
+    this.parseJournalEntries(this._journalEntryService.getEntriesInfo());
   }
 
   public dayClicked = ({ date, events }: { date: Date; events: CalendarEvent[] }): void => {
@@ -58,5 +36,19 @@ export class CalendarComponent implements OnInit {
     const year = date.getFullYear().toString();
 
     return day + '-' + month + '-' + year;
+  }
+
+  public isImportant = (events: JournalEntryEvent[]): boolean => {
+    return events.some(e => e.isImportant);
+  }
+
+  private parseJournalEntries = (entryInfos: entryInfoDto[]): void => {
+    entryInfos.forEach(entry => {
+      this.journalEntryEvents.push({
+        start: entry.date,
+        title: this.stringifyDate(entry.date),
+        isImportant: entry.isImportant
+      })
+    });
   }
 }

@@ -1,6 +1,6 @@
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
     <div class="cal-cell-top" style="cursor: pointer">
-        <span class="badge-important" *ngIf="day.badgeTotal > 0"><i class="bi bi-bookmark-star-fill bi-badge"></i></span>
+        <span class="badge-important" *ngIf="isImportant(day.events)"><i class="bi bi-bookmark-star-fill bi-badge"></i></span>
         <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
     </div>
     <div class="cal-events" *ngIf="day.events.length > 0">
@@ -37,6 +37,6 @@
 </div>
 
 <br />
-<mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [cellTemplate]="customCellTemplate"
+<mwl-calendar-month-view [viewDate]="viewDate" [events]="journalEntryEvents" [cellTemplate]="customCellTemplate"
     (dayClicked)="dayClicked($event.day)">
 </mwl-calendar-month-view>
