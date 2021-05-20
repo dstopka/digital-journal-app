@@ -23,9 +23,9 @@ namespace JournalApi.Services
         private readonly MongoRepository _repository;
         private readonly AppSettings _appSettings;
 
-        public UserService(IDbConfig config, IOptions<AppSettings> appSettings) 
+        public UserService(MongoRepository mongoRepository, IOptions<AppSettings> appSettings) 
         {
-            _repository = new MongoRepository(config);
+            _repository = mongoRepository;
             _appSettings = appSettings.Value;
         } 
 
