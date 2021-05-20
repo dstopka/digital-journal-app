@@ -33,8 +33,10 @@ namespace JournalApi
             services.Configure<AppSettings>(Configuration.GetSection(nameof(AppSettings)));
             services.Configure<DbConfig>(Configuration.GetSection(nameof(DbConfig)));
             services.AddSingleton<IDbConfig>(sp => sp.GetRequiredService<IOptions<DbConfig>>().Value);
+            services.AddSingleton<MongoRepository>();
 
             services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IEntryService, EntryService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

@@ -16,7 +16,7 @@ namespace JournalApi.Controllers
         public UserController(IUserService userService) => _userService = userService;
 
         [HttpGet]
-        [Route("api/[Controller]s")]
+        [Route("~/api/[Controller]s")]
         public async Task<ActionResult<IEnumerable<User>>> Get()
         {
             return new OkObjectResult(await _userService.GetAllUsers());
