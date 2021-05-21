@@ -1,0 +1,21 @@
+<div class="modal-header text-center d-block">
+    <button type="button" class="close" aria-label="Close" (click)="closeRoute('/')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <h4 class="modal-title">Diary note</h4>
+</div>
+<div class="modal-body">
+    <div *ngIf="showError" class="alert alert-danger" role="alert">
+        {{errorMessage}}
+    </div>
+    <form [formGroup]="diaryNoteForm" autocomplete="off" novalidate>
+        <div class="form-group">
+            <label><h3>Editor:</h3></label>
+            <quill-editor>
+            </quill-editor>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="closeRoute('/')">Close</button>
+</div>

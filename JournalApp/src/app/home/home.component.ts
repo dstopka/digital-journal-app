@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LoginComponent } from '../authentication/login/login.component';
 import { RegisterUserComponent } from '../authentication/register-user/register-user.component';
+import { DiaryNoteComponent } from '../authentication/diary-note/diary-note.component';
 import { AuthenticationService } from '../shared/services/authentication.service';
 
 @Component({
@@ -31,6 +32,9 @@ export class HomeComponent implements OnInit {
     }
     else if (url == '/authentication/register') {
       this.dialog = this._modalService.open(RegisterUserComponent, { centered: true, animation: true })
+    }
+    else if (url == '/authentication/diary-note') {
+      this.dialog = this._modalService.open(DiaryNoteComponent, { centered: true, animation: true })
     }
 
     if (this.dialog != null) {
