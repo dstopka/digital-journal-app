@@ -24,6 +24,9 @@
                             [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
                     </li>
                     <li *ngIf='!isAuthenticated' class="nav-item">
+                        <a class="nav-link link-underline" [routerLink]="['/authentication/diary-note']"
+                            routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Diary</a>
+                    <li *ngIf='!isAuthenticated' class="nav-item">
                         <a class="nav-link link-underline" [routerLink]="['/authentication/register']"
                             routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Sign up</a>
                     </li>
