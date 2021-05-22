@@ -38,5 +38,5 @@
 
 <br />
 <mwl-calendar-month-view [viewDate]="viewDate" [events]="journalEntryEvents" [cellTemplate]="customCellTemplate"
-    (dayClicked)="dayClicked($event.day)">
+    (dayClicked)="dayClicked($event.day)" [refresh]="refresh">
 </mwl-calendar-month-view>

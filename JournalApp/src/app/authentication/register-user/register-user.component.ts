@@ -66,7 +66,7 @@ export class RegisterUserComponent implements OnInit {
       passwordConfirmation: formValues.confirmPassword
     };
 
-    this._authService.registerUser("register", user)
+    this._authService.registerUser(user)
       .subscribe(_ => {
         this._router.navigate(["/authentication/login"])
         this.close();

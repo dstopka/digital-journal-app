@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { entryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
+import { Subject } from 'rxjs';
 
 interface JournalEntryEvent extends CalendarEvent {
   isImportant: boolean;
@@ -20,10 +21,14 @@ export class CalendarComponent implements OnInit {
 
   journalEntryEvents: JournalEntryEvent[] = [];
 
-  constructor(private _journalEntryService: JournalEntryService) { }
+  refresh: Subject<any> = new Subject();
 
-  ngOnInit(): void {
-    this.parseJournalEntries(this._journalEntryService.getEntriesInfo());
+  constructor(private _journalEntryService: JournalEntryService) { 
+  }
+
+  async ngOnInit(): Promise<void> {
+    let entryInfos = await this._journalEntryService.getEntriesInfo();
+    this.parseJournalEntries(entryInfos);
   }
 
   public dayClicked = ({ date, events }: { date: Date; events: CalendarEvent[] }): void => {
@@ -43,12 +48,14 @@ export class CalendarComponent implements OnInit {
   }
 
   private parseJournalEntries = (entryInfos: entryInfoDto[]): void => {
-    entryInfos.forEach(entry => {
-      this.journalEntryEvents.push({
-        start: entry.date,
-        title: this.stringifyDate(entry.date),
-        isImportant: entry.isImportant
-      })
-    });
+      entryInfos.forEach(entry => {
+        entry.date = new Date(entry.date);
+        this.journalEntryEvents.push({
+          start: entry.date,
+          title: this.stringifyDate(entry.date),
+          isImportant: entry.isImportant
+        })
+      });
+      this.refresh.next();
   }
 }
