@@ -42,9 +42,9 @@ export class LoginComponent implements OnInit {
       password: login.password
     }
 
-    this._authService.loginUser('login', userForAuth)
+    this._authService.loginUser(userForAuth)
       .subscribe(res => {
-        this.onLogin(res.token, res.isSuccessful);
+        this.onLogin(res.token);
         
         this._router.navigate(['/dashboard']);
         this.close();
@@ -55,9 +55,8 @@ export class LoginComponent implements OnInit {
         })
   }
 
-  private onLogin = (token: string, isSuccessful: boolean) => {
+  private onLogin = (token: string) => {
     localStorage.setItem("token", token);
-    // this._authService.sendAuthStateChangeNotification(isSuccessful);
   }
 
   public closeRoute = (route: string) => {

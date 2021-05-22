@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserForRegistrationDto } from '../models/user/userForRegistrationDto';
@@ -18,12 +17,12 @@ export class AuthenticationService {
     this.apiUrl = 'api/account/';
   }
 
-  public registerUser = (route: string, body: UserForRegistrationDto) => {
-    return this._http.post<RegistrationResponseDto>(`${this.apiUrl}${route}`, body);
+  public registerUser = (body: UserForRegistrationDto) => {
+    return this._http.post<RegistrationResponseDto>(this.getFullRoute('register'), body);
   }
 
-  public loginUser = (route: string, body: UserForAuthenticationDto) => {
-    return this._http.post<AuthResponseDto>(`${this.apiUrl}${route}`, body);
+  public loginUser = (body: UserForAuthenticationDto) => {
+    return this._http.post<AuthResponseDto>(this.getFullRoute('login'), body);
   }
 
   public logoutUser = () => {
@@ -34,5 +33,19 @@ export class AuthenticationService {
     const token = localStorage.getItem('token');
 
     return token == null ? false : !this._jwtHelper.isTokenExpired(token);
+  }
+
+  public getUserId = (): number | null => {
+    const token = localStorage.getItem('token');
+
+    if (token == null) {
+      return null;
+    }
+
+    return this._jwtHelper.decodeToken(token).id;
+  }
+
+  private getFullRoute = (route: string): string => {
+    return `${this.apiUrl}${route}`;
   }
 }
