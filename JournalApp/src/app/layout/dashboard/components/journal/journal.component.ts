@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
-  selector: 'app-diary-note',
-  templateUrl: './diary-note.component.html',
-  styleUrls: ['./diary-note.component.scss', '../authentication.scss']
+  selector: 'app-journal',
+  templateUrl: './journal.component.html',
+  styleUrls: ['./journal.component.scss']
 })
-export class DiaryNoteComponent implements OnInit {
+export class JournalComponent implements OnInit {
   public errorMessage: string = '';
   public showError!: boolean;
-  public diaryNoteForm!: FormGroup;
+  public journalForm!: FormGroup;
 
   constructor(private _router: Router, private _activeModal: NgbActiveModal) { }
   quillConfiguration = QuillConfiguration

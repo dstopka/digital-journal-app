@@ -8,7 +8,7 @@
     <div *ngIf="showError" class="alert alert-danger" role="alert">
         {{errorMessage}}
     </div>
-    <form [formGroup]="diaryNoteForm" autocomplete="off" novalidate>
+    <form [formGroup]="journalForm" autocomplete="off" novalidate>
         <div class="form-group">
             <label><h3>Editor:</h3></label>
             <quill-editor>
