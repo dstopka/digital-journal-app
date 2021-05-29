@@ -9,6 +9,9 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { MenuComponent } from './menu/menu.component';
 import { LayoutComponent } from './layout.component';
 import { CalendarComponent } from './dashboard/components/calendar/calendar.component';
+import { JournalComponent } from './dashboard/components/journal/journal.component';
+import { QuillModule } from 'ngx-quill';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -17,13 +20,16 @@ import { CalendarComponent } from './dashboard/components/calendar/calendar.comp
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory,
-    })
+    }),
+    QuillModule,
+    ReactiveFormsModule
   ],
   declarations: [
     DashboardComponent,
     MenuComponent,
     LayoutComponent,
-    CalendarComponent
+    CalendarComponent,
+    JournalComponent
   ],
   exports: [
     DashboardComponent,
