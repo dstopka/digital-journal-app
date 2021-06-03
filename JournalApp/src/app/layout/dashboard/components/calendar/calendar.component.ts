@@ -3,6 +3,7 @@ import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { entryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
 import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface JournalEntryEvent extends CalendarEvent {
   isImportant: boolean;
@@ -16,14 +17,11 @@ interface JournalEntryEvent extends CalendarEvent {
 export class CalendarComponent implements OnInit {
 
   view: CalendarView = CalendarView.Month;
-
   viewDate: Date = new Date();
-
   journalEntryEvents: JournalEntryEvent[] = [];
-
   refresh: Subject<any> = new Subject();
 
-  constructor(private _journalEntryService: JournalEntryService) { 
+  constructor(private _journalEntryService: JournalEntryService, private _router: Router) {
   }
 
   async ngOnInit(): Promise<void> {
@@ -31,8 +29,8 @@ export class CalendarComponent implements OnInit {
     this.parseJournalEntries(entryInfos);
   }
 
-  public dayClicked = ({ date, events }: { date: Date; events: CalendarEvent[] }): void => {
-    console.log(this.stringifyDate(date));
+  public dayClicked = ({ date }: { date: Date; events: CalendarEvent[] }): void => {    
+      this._router.navigate(['/dashboard', {outlets: {modal: 'entry'}}], {queryParams: {date: this.stringifyDate(date)}});
   }
 
   private stringifyDate = (date: Date) => {
@@ -48,14 +46,14 @@ export class CalendarComponent implements OnInit {
   }
 
   private parseJournalEntries = (entryInfos: entryInfoDto[]): void => {
-      entryInfos.forEach(entry => {
-        entry.date = new Date(entry.date);
-        this.journalEntryEvents.push({
-          start: entry.date,
-          title: this.stringifyDate(entry.date),
-          isImportant: entry.isImportant
-        })
-      });
-      this.refresh.next();
+    entryInfos.forEach(entry => {
+      entry.date = new Date(entry.date);
+      this.journalEntryEvents.push({
+        start: entry.date,
+        title: this.stringifyDate(entry.date),
+        isImportant: entry.isImportant
+      })
+    });
+    this.refresh.next();
   }
 }
