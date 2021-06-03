@@ -8,6 +8,7 @@ import { AuthenticationService } from '../shared/services/authentication.service
 })
 export class LayoutComponent implements OnInit {
   public isAuthenticated!: boolean;
+  
   constructor(private _authService: AuthenticationService) { }
 
   ngOnInit(): void {

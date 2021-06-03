@@ -10,6 +10,7 @@ import { ErrorHandlerService } from './shared/services/error-handler.service';
 import { HomeComponent } from './home/home.component';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { QuillModule } from 'ngx-quill';
+import { LayoutModule } from './layout/layout.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { QuillModule } from 'ngx-quill';
     HttpClientModule,
     AppRoutingModule,
     AuthenticationModule,
+    LayoutModule,
     QuillModule.forRoot()
   ],
   providers: [
