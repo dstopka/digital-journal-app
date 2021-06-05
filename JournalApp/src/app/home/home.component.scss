@@ -12,38 +12,8 @@ nav a,
     color: color(dark, contrasting);
 }
 
-.link-underline {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-
-    &:after {
-        content: "";
-        display: block;
-        border-bottom: 1px solid color(dark, contrasting);
-        width: 0;
-        right: 0;
-        -webkit-transition: 0.6s ease-out;
-        transition: 0.6s ease-out;
-    }
-
-    &:hover {
-        &:after {
-            width: 100%;
-        }
-    }
-}
-
 .lead {
     font-size: 1.5rem;
-}
-
-.btn-swipe-lt {
-    @include button-swipe(color(light, bg-primary), color(light, contrasting))
-}
-
-.btn-swipe-dark {
-    @include button-swipe(color(dark, bg-primary), color(dark, contrasting))
 }
 
 #contact {
