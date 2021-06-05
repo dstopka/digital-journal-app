@@ -1,14 +1,14 @@
 <section class="p-4">
     <div class="row">
-        <div class="col-md-4 text-center">
-            <h2>{{date | date:'fullDate'}}</h2>
+        <div class="col-md-6 text-left pl-2">
+            <p class="lead">{{date | date:'fullDate'}}</p>
         </div>
-        <div *ngIf="openEditor" class="col-md-4 ml-auto text-center justify-content-around">
-            <a class="btn btn-primary btn-lg mr-2" (click)="cancel()">Cancel</a>
-            <a class="btn btn-primary btn-lg ml-2" (click)="submit()">Save</a>
+        <div *ngIf="openEditor" class="col-md-4 ml-auto text-right pr-2 justify-content-around">
+            <a class="btn btn-swipe-dark mr-2" (click)="cancel()">Cancel</a>
+            <a class="btn btn-swipe-dark ml-2" (click)="submit()">Save</a>
         </div>
-        <div *ngIf="!openEditor" class="col-md-4 ml-auto text-center">
-            <a class="btn btn-primary btn-lg" (click)="edit()">Edit</a>
+        <div *ngIf="!openEditor" class="col-md-4 ml-auto text-right pr-2">
+            <a class="btn btn-swipe-dark" (click)="edit()">Edit</a>
         </div>
     </div>
 </section>

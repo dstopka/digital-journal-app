@@ -1,5 +1,10 @@
-.active{
-    font-weight: bold;
-    font-style: italic;
-    color: #fff;
+@import '../../../styles.scss';
+
+.bg-gradient-dark {
+    background-image: linear-gradient(to bottom right, color(dark, bg-secondary), color(dark, bg-tertiary));
+}
+
+nav a {
+    color: color(dark, contrasting) !important;
+    cursor: pointer;
 }
