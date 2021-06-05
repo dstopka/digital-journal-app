@@ -5,12 +5,14 @@ import { LayoutRoutingModule } from './layout-routing.module';
 import { MenuComponent } from './menu/menu.component';
 import { LayoutComponent } from './layout.component';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { JournalEntryModule } from './journal-entry/journal-entry.module';
 
 @NgModule({
   imports: [
     CommonModule,
     LayoutRoutingModule,
-    DashboardModule
+    DashboardModule,
+    JournalEntryModule
   ],
   declarations: [
     MenuComponent,
