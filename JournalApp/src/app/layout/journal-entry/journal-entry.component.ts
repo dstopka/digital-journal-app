@@ -10,6 +10,7 @@ import { JournalEntryEditorComponent } from './components/journal-entry-editor/j
 })
 export class JournalEntryComponent implements OnInit {
   public date: Date | null = null;
+  public openEditor!: boolean;
   @ViewChild(JournalEntryEditorComponent) editorComponent!: JournalEntryEditorComponent;
 
   constructor(private _router: Router, private _activatedRoute: ActivatedRoute) { }
@@ -21,10 +22,21 @@ export class JournalEntryComponent implements OnInit {
         this._router.navigate(['404']);
       }
       this.date = moment(date, "DD-MM-YYYY", true).toDate();
+
+      const openEditor = params['editor'];
+      this.openEditor = openEditor ? openEditor.toLocaleLowerCase() === 'true' : false;
     })
   }
 
   public submit = () => {
     this.editorComponent.submit();
+  }
+
+  public edit = () => {
+    this._router.navigate([], {queryParams: {editor: 'true'}, queryParamsHandling: 'merge'})
+  }
+
+  public cancel = () => {
+    this._router.navigate([], {queryParams: {editor: null}, queryParamsHandling: 'merge'})
   }
 }

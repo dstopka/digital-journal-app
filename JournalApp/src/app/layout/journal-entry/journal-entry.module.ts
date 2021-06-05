@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { JournalEntryComponent } from './journal-entry.component';
 import { JournalEntryEditorComponent } from './components/journal-entry-editor/journal-entry-editor.component';
+import { JournalEntryViewComponent } from './components/journal-entry-view/journal-entry-view.component';
 
 
 
@@ -15,7 +16,8 @@ import { JournalEntryEditorComponent } from './components/journal-entry-editor/j
   ], 
   declarations: [
     JournalEntryComponent,
-    JournalEntryEditorComponent
+    JournalEntryEditorComponent,
+    JournalEntryViewComponent
   ],
   exports: [
     JournalEntryComponent
