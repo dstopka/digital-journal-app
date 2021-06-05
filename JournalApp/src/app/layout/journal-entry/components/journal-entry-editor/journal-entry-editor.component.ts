@@ -9,12 +9,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class JournalEntryEditorComponent implements OnInit {
   quillConfiguration = QuillConfiguration;
-  @Input() entryControl: FormControl = new FormControl;
+  @Input() entryControl!: FormControl;
   @Input() date: Date | null = null;
 
   constructor() { }
 
   ngOnInit(): void {
+    this.entryControl = this.entryControl ?? new FormControl();
+    this.entryControl.setValue("Lorem ipsum dolor sit amet, <strong>consectetur</strong> adipiscing elit.");
   }
 
   public submit = () => {

@@ -3,9 +3,14 @@
         <div class="col-md-4 text-center">
             <h2>{{date | date:'fullDate'}}</h2>
         </div>
-        <div class="col-md-4 ml-auto text-center">
-            <a class="btn btn-primary btn-lg" (click)="submit()">Save!</a>
+        <div *ngIf="openEditor" class="col-md-4 ml-auto text-center justify-content-around">
+            <a class="btn btn-primary btn-lg mr-2" (click)="cancel()">Cancel</a>
+            <a class="btn btn-primary btn-lg ml-2" (click)="submit()">Save</a>
+        </div>
+        <div *ngIf="!openEditor" class="col-md-4 ml-auto text-center">
+            <a class="btn btn-primary btn-lg" (click)="edit()">Edit</a>
         </div>
     </div>
 </section>
-<app-journal-entry-editor [date]="date"></app-journal-entry-editor>
+<app-journal-entry-editor *ngIf="openEditor" [date]="date"></app-journal-entry-editor>
+<app-journal-entry-view *ngIf="!openEditor" [date]="date"></app-journal-entry-view>
