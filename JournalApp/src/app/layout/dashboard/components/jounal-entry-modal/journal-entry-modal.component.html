@@ -7,21 +7,16 @@
                 <button type="button" class="close" aria-label="Close" (click)="close()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Journal Entry</h4>
+                <h4 class="modal-title">{{date | date:'longDate'}}</h4>
+            </div>
+            <div class="modal-header justify-content-end" (click)="goEntryView()">
+                <a class="btn btn-interactive-dark mr-2" role="button">
+                    <i class="bi bi-journal-richtext mr-2"></i>Full page</a>
+                <a class="btn btn-interactive-dark ml-2" role="button" (click)="goEntryEditor()">
+                    <i class="bi bi-pencil mr-2"></i>Edit</a>
             </div>
             <div class="modal-body">
-                <!-- <form autocomplete="off" novalidate> --->
-                <div class="form-group">
-                    <!-- <label><h3>Editor:</h3></label> -->
-                    <quill-editor [formControl]="entryControl" [placeholder]="''" [modules]="quillConfiguration">
-                    </quill-editor>
-                </div>
-                <div class="form-group row">
-                    <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-submit" (click)="submit()">Create entry</button>
-                    </div>
-                </div>
-                <!-- </form> -->
+                <app-journal-entry-view [date]="date"></app-journal-entry-view>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>

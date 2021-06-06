@@ -55,6 +55,15 @@ $palettes: (
     @include button-swipe(color(dark, bg-primary), color(dark, contrasting))
 }
 
+.btn-interactive-dark {
+    background-color: color(dark, interactive-primary) !important;
+    color: color(dark, contrasting) !important;
+
+    &:hover {
+        background-color: color(dark, interactive-secondary) !important;
+    }
+}
+
 .link-underline {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

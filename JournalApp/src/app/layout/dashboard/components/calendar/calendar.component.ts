@@ -29,16 +29,14 @@ export class CalendarComponent implements OnInit {
     this.parseJournalEntries(entryInfos);
   }
 
-  public dayClicked = ({ date }: { date: Date; events: CalendarEvent[] }): void => {    
-      this._router.navigate(['/dashboard', {outlets: {modal: 'entry'}}], {queryParams: {date: this.stringifyDate(date)}});
-  }
+  public dayClicked = ({ date, events }: { date: Date; events: CalendarEvent[] }): void => {    
+      const dateString = this._journalEntryService.stringifyDate(date);
 
-  private stringifyDate = (date: Date) => {
-    const day = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate().toString();
-    const month = date.getMonth() < 10 ? '0' + date.getMonth().toString() : date.getMonth().toString();
-    const year = date.getFullYear().toString();
-
-    return day + '-' + month + '-' + year;
+      if (!events.length) {
+        this._router.navigate(['/entry'], {queryParams: {date: dateString, editor: true}});
+      } else {
+        this._router.navigate(['/dashboard', {outlets: {modal: 'entry'}}], {queryParams: {date: dateString}});
+      }
   }
 
   public isImportant = (events: JournalEntryEvent[]): boolean => {
@@ -50,7 +48,7 @@ export class CalendarComponent implements OnInit {
       entry.date = new Date(entry.date);
       this.journalEntryEvents.push({
         start: entry.date,
-        title: this.stringifyDate(entry.date),
+        title: this._journalEntryService.stringifyDate(entry.date),
         isImportant: entry.isImportant
       })
     });

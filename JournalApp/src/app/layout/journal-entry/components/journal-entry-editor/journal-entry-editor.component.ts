@@ -23,6 +23,15 @@ export class JournalEntryEditorComponent implements OnInit {
     console.log("OK");
   }
 
+  // public submit = () => {
+  //   console.log(this.entryControl.value);
+  //   let regex = /<img.*?src="(.*?)">/g;
+  //   let matches = [...this.entryControl.value.matchAll(regex)];
+  //   matches.forEach((element: any) => {
+  //     console.log(element[1]);
+  //   });
+  // }
+
 }
 
 export const QuillConfiguration = {
