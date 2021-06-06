@@ -20,7 +20,8 @@ import { JournalEntryViewComponent } from './components/journal-entry-view/journ
     JournalEntryViewComponent
   ],
   exports: [
-    JournalEntryComponent
+    JournalEntryComponent,
+    JournalEntryViewComponent
   ]
 })
 export class JournalEntryModule { }

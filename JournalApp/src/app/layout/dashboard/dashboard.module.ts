@@ -9,6 +9,7 @@ import { CalendarComponent } from './components/calendar/calendar.component';
 import { DashboardComponent } from './dashboard.component';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { JournalEntryModalComponent } from './components/jounal-entry-modal/journal-entry-modal.component';
+import { JournalEntryModule } from '../journal-entry/journal-entry.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { JournalEntryModalComponent } from './components/jounal-entry-modal/jour
       useFactory: adapterFactory,
     }),
     QuillModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    JournalEntryModule
   ],
   declarations: [
     DashboardComponent,

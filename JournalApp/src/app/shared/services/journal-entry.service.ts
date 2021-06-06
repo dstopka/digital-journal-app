@@ -34,6 +34,14 @@ export class JournalEntryService {
 
   }
 
+  public stringifyDate = (date: Date): string => {
+    const day = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate().toString();
+    const month = date.getMonth() < 10 ? '0' + date.getMonth().toString() : date.getMonth().toString();
+    const year = date.getFullYear().toString();
+
+    return day + '-' + month + '-' + year;
+  }
+
   private getFullRoute = (count: Count, ...parts: string[]): string => {
     let route: string = '';
     parts.forEach(part => {
