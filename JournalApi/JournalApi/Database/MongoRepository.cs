@@ -16,5 +16,6 @@ namespace JournalApi.Database
             _db = client.GetDatabase(config.Database);
         }        
         public IMongoCollection<User> Users => _db.GetCollection<User>("Users");
+        public IMongoCollection<Journal> Journals => _db.GetCollection<Journal>("Journals");
     }
 }

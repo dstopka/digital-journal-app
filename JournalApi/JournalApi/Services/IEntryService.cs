@@ -10,5 +10,7 @@ namespace JournalApi.Services.Abstract
     {
         Task<IEnumerable<EntryInfoDto>> GetEntryInfos(long userId);
         Task<long> GetNextId();
+        Task CreateJournal(Journal journal);
+        Task<Journal> GetJournalByDateAndId(string date, long userId);
     }
 }

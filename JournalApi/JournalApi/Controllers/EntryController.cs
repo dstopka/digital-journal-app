@@ -14,14 +14,26 @@ namespace JournalApi.Controllers
     [Route("api/[Controller]")]
     public class EntryController : Controller
     {
+        private readonly IEntryService _entryService;
+        private readonly IMapper _mapper;
+
         public class OverviewQuery
         {
             [Range(1, Int64.MaxValue)]
             public long UserId { get; set; }
         }
-        private readonly IEntryService _entryService;
-
-        public EntryController(IEntryService entryService) => _entryService = entryService;
+        public class TextQuery
+        {
+            public string? Date { get; set; }
+            [Range(1, Int64.MaxValue)]
+            public long UserId { get; set; }
+        }
+        
+        public EntryController(IMapper mapper, IEntryService entryService)
+        {
+            _mapper = mapper;
+            _entryService = entryService;
+        }
 
         [HttpGet]
         [Route("~/api/Entries/overview")]
@@ -33,6 +45,21 @@ namespace JournalApi.Controllers
             }
 
             return new OkObjectResult(await _entryService.GetEntryInfos(query.UserId));
+        }
+
+        [HttpGet("dashboard/journal/(modal:entry)")]
+        public async Task<ActionResult<Journal>> GetText([FromQuery, BindRequired]TextQuery query)
+        {
+            return new OkObjectResult(await _entryService.GetJournalByDateAndId(query.Date!, query.UserId));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveJournal([FromBody] Journal journal)
+        {
+            var newJournal = _mapper.Map<Journal>(journal);
+            await _entryService.CreateJournal(newJournal);
+
+            return StatusCode(201);
         }
 
     }
