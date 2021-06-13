@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { journal } from 'src/app/shared/models/journal-entry/journal';
+import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
+import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
 @Component({
   selector: 'app-journal-entry-editor',
@@ -9,20 +12,41 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class JournalEntryEditorComponent implements OnInit {
   quillConfiguration = QuillConfiguration;
-  @Input() entryControl!: FormControl;
+  public errorMessage: string = "";
+  public showError!: boolean;
+  @Input() entryJournalControl!: FormControl;
   @Input() date: Date | null = null;
 
-  constructor() { }
+  constructor(private _journalEntryService: JournalEntryService,
+              private _authService: AuthenticationService,
+              private _router: Router) { }
 
   ngOnInit(): void {
-    this.entryControl = this.entryControl ?? new FormControl();
-    this.entryControl.setValue("Lorem ipsum dolor sit amet, <strong>consectetur</strong> adipiscing elit.");
+    this.entryJournalControl = this.entryJournalControl ?? new FormControl('');
+    this.entryJournalControl.setValue("Lorem ipsum");
   }
 
   public submit = () => {
+    this.showError = false;
+    const journal: journal = {
+      journalText: this.entryJournalControl.value,
+      userId: this._authService.getUserId()!,
+      date: this._journalEntryService.stringifyDate(this.date!),
+      isImportant: false
+    };
+
+    this._journalEntryService.saveJournal(journal)
+        .subscribe(_ => {
+          this._router.navigate(["/entry", {date: journal.date, userId: journal.userId}])
+        },
+        error => {
+          this.errorMessage = error;
+          this.showError = true;
+          console.log("ERROR: " + error);
+        })
+
     console.log("OK");
   }
-
   // public submit = () => {
   //   console.log(this.entryControl.value);
   //   let regex = /<img.*?src="(.*?)">/g;

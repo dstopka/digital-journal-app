@@ -5,7 +5,7 @@ import { LayoutComponent } from './layout.component';
 
 const routes: Routes = [
   { 
-    path: '', 
+    path: '',  
     component: LayoutComponent, 
     children: [
       { path: '', loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)},
