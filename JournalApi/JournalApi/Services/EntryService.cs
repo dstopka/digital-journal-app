@@ -8,6 +8,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using AutoMapper;
 using BC = BCrypt.Net.BCrypt;
 
 using JournalApi.Database;
@@ -21,26 +22,30 @@ namespace JournalApi.Services
     public class EntryService : IEntryService
     {
         private readonly MongoRepository _repository;
-        private EntryInfoDto[] entryInfos;
+        private readonly IMapper _mapper;
+        // private EntryInfoDto[] entryInfos;
 
-        public EntryService(MongoRepository mongoRepository)
+        public EntryService(IMapper mapper, MongoRepository mongoRepository)
         {
             _repository = mongoRepository;
-            entryInfos = new EntryInfoDto[] {
-                    new EntryInfoDto{Date = DateTime.Today, IsImportant = true},
-                    new EntryInfoDto{Date = DateTime.Today.AddDays(1), IsImportant = false},
-                    new EntryInfoDto{Date = DateTime.Today.AddDays(-5), IsImportant = true}
-                };
+            _mapper = mapper;
+            // entryInfos = new EntryInfoDto[] {
+            //         new EntryInfoDto{Date = DateTime.Today, IsImportant = true},
+            //         new EntryInfoDto{Date = DateTime.Today.AddDays(1), IsImportant = false},
+            //         new EntryInfoDto{Date = DateTime.Today.AddDays(-5), IsImportant = true}
+            //     };
         }
 
         public async Task<IEnumerable<EntryInfoDto>> GetEntryInfos(long userId)
         {
-            return await Task.Run(() => {return entryInfos; });
-        }
+            // return await Task.Run(() => {return entryInfos; });
+            FilterDefinition<JournalEntry> filterByUserId = Builders<JournalEntry>.Filter.Eq(m => m.UserId, userId);
+        
+            var entries = await _repository.JournalEntries.Find(filterByUserId).ToListAsync();
 
-        public async Task<long> GetNextId()
-        {
-            return await _repository.Users.CountDocumentsAsync(new BsonDocument()) + 1;
+            var entryInfos = _mapper.Map<List<JournalEntry>, EntryInfoDto[]>(entries);
+
+            return entryInfos;
         }
 
         public async Task CreateEntry(JournalEntry entry)
@@ -57,6 +62,11 @@ namespace JournalApi.Services
             var userIdAndDateFilter = builder.And(new [] {filterByUserId, filterByDate});
 
             return await _repository.JournalEntries.Find(userIdAndDateFilter).FirstOrDefaultAsync();
+        }
+
+        public async Task<long> GetNextId()
+        {
+            return await _repository.Users.CountDocumentsAsync(new BsonDocument()) + 1;
         }
     }
 }

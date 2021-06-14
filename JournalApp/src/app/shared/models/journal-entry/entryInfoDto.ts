@@ -1,4 +1,4 @@
-export interface entryInfoDto {
-    date: Date,
+export interface EntryInfoDto {
+    date: string,
     isImportant: boolean
 }

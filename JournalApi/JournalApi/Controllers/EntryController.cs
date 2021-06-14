@@ -27,7 +27,7 @@ namespace JournalApi.Controllers
         }
         public class EntryQuery
         {
-            [Required]
+            [Required(ErrorMessage = "Date is required")]
             public string? Date { get; set; }
             [Range(1, Int64.MaxValue)]
             public long UserId { get; set; }

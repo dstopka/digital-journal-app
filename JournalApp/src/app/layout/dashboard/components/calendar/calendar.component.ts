@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
-import { entryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
+import { EntryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
 import { Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import moment from 'moment';
 
 interface JournalEntryEvent extends CalendarEvent {
   isImportant: boolean;
@@ -43,12 +44,12 @@ export class CalendarComponent implements OnInit {
     return events.some(e => e.isImportant);
   }
 
-  private parseJournalEntries = (entryInfos: entryInfoDto[]): void => {
+  private parseJournalEntries = (entryInfos: EntryInfoDto[]): void => {
     entryInfos.forEach(entry => {
-      entry.date = new Date(entry.date);
+      const entryDate = moment(entry.date, "DD-MM-YYYY", true).toDate();
       this.journalEntryEvents.push({
-        start: entry.date,
-        title: this._journalEntryService.stringifyDate(entry.date),
+        start: entryDate,
+        title: entry.date,
         isImportant: entry.isImportant
       })
     });
