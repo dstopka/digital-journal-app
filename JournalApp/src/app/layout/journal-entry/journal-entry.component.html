@@ -12,5 +12,5 @@
         </div>
     </div>
 </section>
-<app-journal-entry-editor *ngIf="openEditor" [date]="date"></app-journal-entry-editor>
-<app-journal-entry-view *ngIf="!openEditor" [date]="date"></app-journal-entry-view>
+<app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date"></app-journal-entry-editor>
+<app-journal-entry-view *ngIf="!openEditor" [content]="entryText" [date]="date"></app-journal-entry-view>

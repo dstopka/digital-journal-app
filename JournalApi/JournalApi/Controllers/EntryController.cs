@@ -81,5 +81,23 @@ namespace JournalApi.Controllers
             return StatusCode(201);
         }
 
+        [HttpPut]
+        [Route("")]
+        public async Task<IActionResult> UpdateEntry([FromBody]JournalEntryDto entryDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new CreateEntryResponseDto
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage))
+                });
+            }
+
+            var updatedEntry = _mapper.Map<JournalEntry>(entryDto);
+            await _entryService.UpdateEntry(updatedEntry);
+
+            return StatusCode(201);
+        }
+
     }
 }

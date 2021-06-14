@@ -7,6 +7,7 @@ namespace JournalApi.Models
     public class JournalEntry
     {
         [BsonId]
+        [BsonIgnoreIfDefault]
         public ObjectId InternalId { get; set; }
         public string? EntryText {get; set;}
         public long? UserId {get; set;}

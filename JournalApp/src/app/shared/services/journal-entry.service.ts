@@ -51,6 +51,10 @@ export class JournalEntryService {
     return this._http.post<JournalResponseDto>(this.apiUrlSingle, body);
   }
 
+  public updateEntry = (body: JournalEntry) => {
+    return this._http.put<JournalResponseDto>(this.apiUrlSingle, body);
+  }
+
   public stringifyDate = (date: Date): string => {
     const day = date.getDate() < 10 ? '0' + date.getDate().toString() : date.getDate().toString();
     const month = date.getMonth() < 10 ? '0' + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString();

@@ -11,7 +11,7 @@ import { JournalEntryService } from 'src/app/shared/services/journal-entry.servi
 })
 export class JournalEntryModalComponent implements OnInit, OnDestroy, AfterViewChecked {
   public date!: Date;
-
+  public entryText!: string;
   @ViewChild('modal') modal!: ElementRef;
   @ViewChild('modalBackdrop') modalBackdrop!: ElementRef;
 
@@ -26,8 +26,14 @@ export class JournalEntryModalComponent implements OnInit, OnDestroy, AfterViewC
     })
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this._renderer.addClass(document.body, 'modal-open');
+
+    if (this.date != null)
+    {
+      let entry = await this._journalEntryService.getEntry(this._journalEntryService.stringifyDate(this.date)); 
+      this.entryText = entry.entryText;
+    }
   }
 
   ngAfterViewChecked(): void {

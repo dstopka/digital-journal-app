@@ -23,22 +23,15 @@ namespace JournalApi.Services
     {
         private readonly MongoRepository _repository;
         private readonly IMapper _mapper;
-        // private EntryInfoDto[] entryInfos;
 
         public EntryService(IMapper mapper, MongoRepository mongoRepository)
         {
             _repository = mongoRepository;
             _mapper = mapper;
-            // entryInfos = new EntryInfoDto[] {
-            //         new EntryInfoDto{Date = DateTime.Today, IsImportant = true},
-            //         new EntryInfoDto{Date = DateTime.Today.AddDays(1), IsImportant = false},
-            //         new EntryInfoDto{Date = DateTime.Today.AddDays(-5), IsImportant = true}
-            //     };
         }
 
         public async Task<IEnumerable<EntryInfoDto>> GetEntryInfos(long userId)
         {
-            // return await Task.Run(() => {return entryInfos; });
             FilterDefinition<JournalEntry> filterByUserId = Builders<JournalEntry>.Filter.Eq(m => m.UserId, userId);
         
             var entries = await _repository.JournalEntries.Find(filterByUserId).ToListAsync();
@@ -51,6 +44,17 @@ namespace JournalApi.Services
         public async Task CreateEntry(JournalEntry entry)
         {
             await _repository.JournalEntries.InsertOneAsync(entry);
+        }
+
+        public async Task UpdateEntry(JournalEntry entry)
+        {
+            var builder = Builders<JournalEntry>.Filter;
+            FilterDefinition<JournalEntry> filterByUserId = builder.Eq(m => m.UserId, entry.UserId);
+            FilterDefinition<JournalEntry> filterByDate = builder.Eq(m => m.Date, entry.Date);
+
+            var userIdAndDateFilter = builder.And(new [] {filterByUserId, filterByDate});
+
+            await _repository.JournalEntries.ReplaceOneAsync(userIdAndDateFilter, entry);
         }
 
         public async Task<JournalEntry> GetEntryByDateAndId(string date, long userId)

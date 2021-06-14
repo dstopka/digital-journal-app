@@ -16,7 +16,7 @@
                     <i class="bi bi-pencil mr-2"></i>Edit</a>
             </div>
             <div class="modal-body">
-                <app-journal-entry-view [date]="date"></app-journal-entry-view>
+                <app-journal-entry-view [date]="date" [content]="entryText"></app-journal-entry-view>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>
