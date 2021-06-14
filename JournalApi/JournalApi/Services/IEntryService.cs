@@ -11,6 +11,7 @@ namespace JournalApi.Services.Abstract
         Task<IEnumerable<EntryInfoDto>> GetEntryInfos(long userId);
         Task<long> GetNextId();
         Task CreateEntry(JournalEntry journal);
+        Task UpdateEntry(JournalEntry journal);
         Task<JournalEntry> GetEntryByDateAndId(string date, long userId);
     }
 }

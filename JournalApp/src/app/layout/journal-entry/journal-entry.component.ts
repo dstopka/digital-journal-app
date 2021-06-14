@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
+import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { JournalEntryEditorComponent } from './components/journal-entry-editor/journal-entry-editor.component';
 
 @Component({
@@ -11,11 +13,14 @@ import { JournalEntryEditorComponent } from './components/journal-entry-editor/j
 export class JournalEntryComponent implements OnInit {
   public date: Date | null = null;
   public openEditor!: boolean;
+  public entryText!: string;
+  private entryExists!: boolean;
   @ViewChild(JournalEntryEditorComponent) editorComponent!: JournalEntryEditorComponent;
 
-  constructor(private _router: Router, private _activatedRoute: ActivatedRoute) { }
+  constructor(private _router: Router, private _activatedRoute: ActivatedRoute,
+    private _journalEntryService: JournalEntryService) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this._activatedRoute.queryParams.subscribe(params => {
       const date = params['date'];
       if (date == null || date == undefined || !moment(date, "DD-MM-YYYY", true).isValid()) {
@@ -26,10 +31,22 @@ export class JournalEntryComponent implements OnInit {
       const openEditor = params['editor'];
       this.openEditor = openEditor ? openEditor.toLocaleLowerCase() === 'true' : false;
     })
+
+    if (this.date != null)
+    {
+      let entry = await this._journalEntryService.getEntry(this._journalEntryService.stringifyDate(this.date)); 
+      if (entry == null) {
+        this.entryExists = false;
+        this.entryText = '';
+      } else {
+        this.entryExists = true;
+        this.entryText = entry.entryText;
+      }
+    }
   }
 
   public submit = () => {
-    this.editorComponent.submit();
+    this.editorComponent.submit(this.entryExists);
   }
 
   public edit = () => {

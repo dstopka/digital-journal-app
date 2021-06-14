@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { JournalEntry } from 'src/app/shared/models/journal-entry/journalEntry';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-journal-entry-editor',
@@ -11,22 +12,27 @@ import { AuthenticationService } from 'src/app/shared/services/authentication.se
   styleUrls: ['./journal-entry-editor.component.scss']
 })
 export class JournalEntryEditorComponent implements OnInit {
-  quillConfiguration = QuillConfiguration;
+  private _text = new BehaviorSubject<string>('');
+  public quillConfiguration = QuillConfiguration;
   public errorMessage: string = "";
   public showError!: boolean;
-  @Input() journalEntryControl!: FormControl;
+  public journalEntryControl!: FormControl;
   @Input() date: Date | null = null;
+  @Input() set entryText(text: string) {
+    this._text.next(text);
+  }
 
   constructor(private _journalEntryService: JournalEntryService,
               private _authService: AuthenticationService,
               private _router: Router) { }
 
   ngOnInit(): void {
-    this.journalEntryControl = this.journalEntryControl ?? new FormControl('');
-    this.journalEntryControl.setValue("Lorem ipsum");
+    this._text.subscribe(text => {
+      this.journalEntryControl = new FormControl(text);
+    })    
   }
 
-  public submit = () => {
+  public submit = (update: boolean) => {
     this.showError = false;
     const stringDate = this._journalEntryService.stringifyDate(this.date!);
 
@@ -37,17 +43,28 @@ export class JournalEntryEditorComponent implements OnInit {
       isImportant: false
     };
 
-    this._journalEntryService.saveEntry(journal)
-        .subscribe(_ => {
-          this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}});
-        },
-        error => {
-          this.errorMessage = error;
-          this.showError = true;
-          console.log("ERROR: " + error);
-        })
-
-    console.log("OK");
+    if (update) {
+      this._journalEntryService.updateEntry(journal)
+      .subscribe(_ => {
+        this._router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+          this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}}));
+      },
+      error => {
+        this.errorMessage = error;
+        this.showError = true;
+        console.log("ERROR: " + error);
+      })
+    } else {
+      this._journalEntryService.saveEntry(journal)
+      .subscribe(_ => {
+        this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}});
+      },
+      error => {
+        this.errorMessage = error;
+        this.showError = true;
+        console.log("ERROR: " + error);
+      })
+    }
   }
   // public submit = () => {
   //   console.log(this.entryControl.value);
