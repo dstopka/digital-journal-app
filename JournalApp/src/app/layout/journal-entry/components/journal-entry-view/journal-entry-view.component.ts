@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
-import { journal } from 'src/app/shared/models/journal-entry/journal';
+import { JournalEntry } from 'src/app/shared/models/journal-entry/journalEntry';
 
 @Component({
   selector: 'app-journal-entry-view',
@@ -21,12 +21,12 @@ export class JournalEntryViewComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.date != null)
     {
-      let journalText = await this._journalEntryService.getJournalText(this._journalEntryService.stringifyDate(this.date)); 
+      let journalText = await this._journalEntryService.getEntry(this._journalEntryService.stringifyDate(this.date)); 
       this.parseJournalTextToContext(journalText)
     }
   }
 
-  private parseJournalTextToContext = (journal: journal): void => {
-    this.content = journal.journalText;
+  private parseJournalTextToContext = (entry: JournalEntry): void => {
+    this.content = entry.entryText;
   }
 }

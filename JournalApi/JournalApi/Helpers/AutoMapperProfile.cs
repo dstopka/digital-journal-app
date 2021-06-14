@@ -1,5 +1,6 @@
 using AutoMapper;
 using JournalApi.Models;
+using System.Collections.Generic;
 
 namespace JournalApi.Helpers
 {    public class AutoMapperProfile : Profile
@@ -8,6 +9,7 @@ namespace JournalApi.Helpers
         {
             CreateMap<UserForRegistrationDto, User>();
             CreateMap<JournalEntryDto, JournalEntry>();
+            CreateMap<JournalEntry, EntryInfoDto>();
         }
     }
 }

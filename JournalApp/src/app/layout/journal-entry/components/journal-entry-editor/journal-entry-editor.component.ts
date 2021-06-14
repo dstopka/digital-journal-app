@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { journal } from 'src/app/shared/models/journal-entry/journal';
+import { JournalEntry } from 'src/app/shared/models/journal-entry/journalEntry';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 
@@ -14,7 +14,7 @@ export class JournalEntryEditorComponent implements OnInit {
   quillConfiguration = QuillConfiguration;
   public errorMessage: string = "";
   public showError!: boolean;
-  @Input() entryJournalControl!: FormControl;
+  @Input() journalEntryControl!: FormControl;
   @Input() date: Date | null = null;
 
   constructor(private _journalEntryService: JournalEntryService,
@@ -22,22 +22,24 @@ export class JournalEntryEditorComponent implements OnInit {
               private _router: Router) { }
 
   ngOnInit(): void {
-    this.entryJournalControl = this.entryJournalControl ?? new FormControl('');
-    this.entryJournalControl.setValue("Lorem ipsum");
+    this.journalEntryControl = this.journalEntryControl ?? new FormControl('');
+    this.journalEntryControl.setValue("Lorem ipsum");
   }
 
   public submit = () => {
     this.showError = false;
-    const journal: journal = {
-      journalText: this.entryJournalControl.value,
-      userId: this._authService.getUserId()!,
-      date: this._journalEntryService.stringifyDate(this.date!),
+    const stringDate = this._journalEntryService.stringifyDate(this.date!);
+
+    const journal: JournalEntry = {
+      entryText: this.journalEntryControl.value,
+      userId: Number(this._authService.getUserId()!),
+      date: stringDate,
       isImportant: false
     };
 
-    this._journalEntryService.saveJournal(journal)
+    this._journalEntryService.saveEntry(journal)
         .subscribe(_ => {
-          this._router.navigate(["/entry", {date: journal.date, userId: journal.userId}])
+          this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}});
         },
         error => {
           this.errorMessage = error;

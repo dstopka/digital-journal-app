@@ -7,7 +7,7 @@ namespace JournalApi.Models
         public string? EntryText {get; set;}
 
         [Required(ErrorMessage = "UserId is required")]
-        public long? UserId {get; set;}
+        public long UserId {get; set;}
 
         [Required(ErrorMessage = "Date is required")]
         public string? Date {get; set;}

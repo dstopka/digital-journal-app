@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { entryInfoDto } from '../models/journal-entry/entryInfoDto';
-import { journal } from '../models/journal-entry/journal';
+import { EntryInfoDto } from '../models/journal-entry/entryInfoDto';
+import { JournalEntry } from '../models/journal-entry/journalEntry';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { AuthenticationService } from './authentication.service';
@@ -24,7 +24,7 @@ export class JournalEntryService {
     this.apiUrlMultiple = 'api/entries/';
   }
 
-  public getEntriesInfo = (): Promise<entryInfoDto[]> => {
+  public getEntriesInfo = (): Promise<EntryInfoDto[]> => {
     const userId = this._authService.getUserId();
 
     if (userId == null) {
@@ -32,22 +32,23 @@ export class JournalEntryService {
     }
 
     const options = { params: new HttpParams().set('userId', userId.toString()) };
-    return this._http.get<entryInfoDto[]>(this.getFullRoute(Count.Multiple, 'overview'), options).toPromise();
+    return this._http.get<EntryInfoDto[]>(this.getFullRoute(Count.Multiple, 'overview'), options).toPromise();
 
   }
 
-  public getJournalText = (date: string): Promise<journal> => {
+  public getEntry = (date: string): Promise<JournalEntry> => {
     const userId = this._authService.getUserId();
 
     const options = { params: new HttpParams()
                                   .set('date', date)
                                   .set('userId', userId!.toString()) 
                     };
-    return this._http.get<journal>(this.getFullRouteJournalEntry('dashboard/journal/(modal:entry)'), options).toPromise();
+
+    return this._http.get<JournalEntry>(this.apiUrlSingle, options).toPromise();
   }
 
-  public saveJournal = (body: journal) => {
-    return this._http.post<JournalResponseDto>(this.getFullRouteJournalEntry(''), body);
+  public saveEntry = (body: JournalEntry) => {
+    return this._http.post<JournalResponseDto>(this.apiUrlSingle, body);
   }
 
   public stringifyDate = (date: Date): string => {
@@ -56,10 +57,6 @@ export class JournalEntryService {
     const year = date.getFullYear().toString();
 
     return day + '-' + month + '-' + year;
-  }
-
-  private getFullRouteJournalEntry = (route: string): string => {
-    return `${this.apiUrlSingle}${route}`;
   }
 
   private getFullRoute = (count: Count, ...parts: string[]): string => {
