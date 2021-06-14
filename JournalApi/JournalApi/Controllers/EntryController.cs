@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using AutoMapper;
 
 using JournalApi.Models;
+using JournalApi.Responses;
 using JournalApi.Services.Abstract;
 
 namespace JournalApi.Controllers
@@ -22,8 +25,9 @@ namespace JournalApi.Controllers
             [Range(1, Int64.MaxValue)]
             public long UserId { get; set; }
         }
-        public class TextQuery
+        public class EntryQuery
         {
+            [Required]
             public string? Date { get; set; }
             [Range(1, Int64.MaxValue)]
             public long UserId { get; set; }
@@ -47,17 +51,32 @@ namespace JournalApi.Controllers
             return new OkObjectResult(await _entryService.GetEntryInfos(query.UserId));
         }
 
-        [HttpGet("dashboard/journal/(modal:entry)")]
-        public async Task<ActionResult<Journal>> GetText([FromQuery, BindRequired]TextQuery query)
+        [HttpGet]
+        [Route("")]
+        public async Task<ActionResult<JournalEntry>> GetEntry([FromQuery, BindRequired]EntryQuery query)
         {
-            return new OkObjectResult(await _entryService.GetJournalByDateAndId(query.Date!, query.UserId));
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            return new OkObjectResult(await _entryService.GetEntryByDateAndId(query.Date!, query.UserId));
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveJournal([FromBody] Journal journal)
+        [Route("")]
+        public async Task<IActionResult> CreateEntry([FromBody]JournalEntryDto entryDto)
         {
-            var newJournal = _mapper.Map<Journal>(journal);
-            await _entryService.CreateJournal(newJournal);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new CreateEntryResponseDto
+                {
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage))
+                });
+            }
+
+            var newEntry = _mapper.Map<JournalEntry>(entryDto);
+            await _entryService.CreateEntry(newEntry);
 
             return StatusCode(201);
         }
