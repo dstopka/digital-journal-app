@@ -7,6 +7,7 @@ namespace JournalApi.Helpers
         public AutoMapperProfile()
         {
             CreateMap<UserForRegistrationDto, User>();
+            CreateMap<JournalEntryDto, JournalEntry>();
         }
     }
 }

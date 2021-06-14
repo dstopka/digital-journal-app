@@ -43,20 +43,20 @@ namespace JournalApi.Services
             return await _repository.Users.CountDocumentsAsync(new BsonDocument()) + 1;
         }
 
-        public async Task CreateJournal(Journal journal)
+        public async Task CreateEntry(JournalEntry entry)
         {
-            await _repository.Journals.InsertOneAsync(journal);
+            await _repository.JournalEntries.InsertOneAsync(entry);
         }
 
-        public async Task<Journal> GetJournalByDateAndId(string date, long userId)
+        public async Task<JournalEntry> GetEntryByDateAndId(string date, long userId)
         {
-            var builder = Builders<Journal>.Filter;
-            FilterDefinition<Journal> filterByUserId = builder.Eq(m => m.UserId, userId);
-            FilterDefinition<Journal> filterByDate = builder.Eq(m => m.Date, date);
+            var builder = Builders<JournalEntry>.Filter;
+            FilterDefinition<JournalEntry> filterByUserId = builder.Eq(m => m.UserId, userId);
+            FilterDefinition<JournalEntry> filterByDate = builder.Eq(m => m.Date, date);
 
             var userIdAndDateFilter = builder.And(new [] {filterByUserId, filterByDate});
 
-            return await _repository.Journals.Find(userIdAndDateFilter).FirstOrDefaultAsync();
+            return await _repository.JournalEntries.Find(userIdAndDateFilter).FirstOrDefaultAsync();
         }
     }
 }
