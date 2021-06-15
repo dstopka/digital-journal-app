@@ -12,16 +12,16 @@ $palettes: (
         bg-secondary: #f1eeee,
         bg-tertiary: #bbb9b9,
         contrasting: #4e4e4e,
-        interactive-primary: #80cfd3,
-        interactive-secondary: #65c4c9
+        interactive-primary: #67c9ce,
+        interactive-secondary: #53c1c7
     ),
     dark: (
         bg-primary: #4e4e4e,
         bg-secondary: #1f1f1f,
         bg-tertiary: #313131,
         contrasting: #f9f8f5,
-        interactive-primary: #cf7488,
-        interactive-secondary: #d15e77
+        interactive-primary: #cf6b80,
+        interactive-secondary: #d35a74
     )
 );
 
@@ -94,6 +94,10 @@ $palettes: (
     background-color: color(dark, interactive-primary) !important;
 }
 
+.interactive-dark {
+    color: color(dark, interactive-primary) !important;
+}
+
 .cal-month-view .cal-day-cell.cal-today {
     background-color: lighten(color(light, interactive-primary), 25%) !important;
 }
@@ -108,4 +112,8 @@ $palettes: (
 
 .vh-50 {
     height: 50vh;
+}
+
+.nav-link {
+    cursor: pointer;
 }

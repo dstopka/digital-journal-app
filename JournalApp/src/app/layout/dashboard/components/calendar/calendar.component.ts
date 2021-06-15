@@ -17,12 +17,15 @@ interface JournalEntryEvent extends CalendarEvent {
 })
 export class CalendarComponent implements OnInit {
 
-  view: CalendarView = CalendarView.Month;
-  viewDate: Date = new Date();
-  journalEntryEvents: JournalEntryEvent[] = [];
-  refresh: Subject<any> = new Subject();
+  public view: CalendarView = CalendarView.Month;
+  public viewDate!: Date;
+  public previousYearDate!: Date;
+  public nextYearDate!: Date;
+  public journalEntryEvents: JournalEntryEvent[] = [];
+  public refresh: Subject<any> = new Subject();
 
   constructor(private _journalEntryService: JournalEntryService, private _router: Router) {
+    this.resetDate();
   }
 
   async ngOnInit(): Promise<void> {
@@ -54,5 +57,31 @@ export class CalendarComponent implements OnInit {
       })
     });
     this.refresh.next();
+  }
+
+  public rewindYear = (): void => {
+    this.nextYearDate = this.viewDate;
+    this.viewDate = this.changeYear(this.viewDate, -1);
+    this.previousYearDate = this.changeYear(this.viewDate, -1);
+  }
+
+  public forwardYear = (): void => {
+    this.previousYearDate = this.viewDate;
+    this.viewDate =  this.changeYear(this.viewDate, 1);
+    this.nextYearDate = this.changeYear(this.viewDate, 1);
+  }
+
+  private changeYear = (date: Date, n: number): Date => {
+    const m = date.getMonth();
+    const d = date.getDate();
+    const y = date.getFullYear();
+
+    return new Date(y + n, m, d);
+  }
+
+  public resetDate = (): void => {
+    this.viewDate = new Date();
+    this.nextYearDate = this.changeYear(this.viewDate, 1);
+    this.previousYearDate = this.changeYear(this.viewDate, -1);
   }
 }
