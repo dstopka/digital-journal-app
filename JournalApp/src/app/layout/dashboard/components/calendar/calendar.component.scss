@@ -6,8 +6,28 @@
     transform: rotate($angle);
 }
 
-h3 {
-    margin: 0 0 10px;
+.lead {
+    font-weight: 600;
+}
+
+.rem-2 {
+    font-size: 2rem !important;
+}
+
+.rem-1 {
+    font-size: 1rem !important;
+}
+
+.zoom {
+    transition: transform .2s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.pointer {
+    cursor: pointer;
 }
 
 pre {
