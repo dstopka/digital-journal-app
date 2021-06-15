@@ -55,6 +55,10 @@ $palettes: (
     @include button-swipe(color(dark, bg-primary), color(dark, contrasting))
 }
 
+.btn-swipe-dark-interactive {
+    @include button-swipe(color(dark, interactive-primary), color(dark, contrasting))
+}
+
 .btn-interactive-dark {
     background-color: color(dark, interactive-primary) !important;
     color: color(dark, contrasting) !important;
@@ -116,4 +120,28 @@ $palettes: (
 
 .nav-link {
     cursor: pointer;
+}
+
+.container {
+    max-width: 1040px !important;
+}
+
+.navbar-brand {
+    font-weight: 600 !important;
+}
+
+.zoom {
+    transition: transform .2s;
+
+    &:hover {
+        transform: scale(1.1);
+    }
+}
+
+.rem-2 {
+    font-size: 2rem !important;
+}
+
+.rem-1 {
+    font-size: 1rem !important;
 }

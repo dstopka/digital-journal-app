@@ -78,7 +78,6 @@ export class JournalEntryEditorComponent implements OnInit {
   // }
 
   public toggle = () => {
-    // console.log(this.isImportant);
     this.isImportantChange.emit(this.isImportant);
   }
 
