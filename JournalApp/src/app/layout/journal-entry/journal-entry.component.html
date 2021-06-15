@@ -1,8 +1,11 @@
 <section class="p-4">
-    <div class="row">
-        <div class="col-md-6 text-left pl-2">
+    <div class="row align-items-center">
+        <div class="text-left pl-2 pr-4">
             <p class="lead">{{date | date:'fullDate'}}</p>
         </div>
+        <span class="badge badge-important" *ngIf="isImportant">
+            <i class="bi bi-bookmark-star-fill bi-badge"></i>
+        </span>
         <div *ngIf="openEditor" class="col-md-4 ml-auto text-right pr-2 justify-content-around">
             <a class="btn btn-swipe-dark mr-2" (click)="cancel()">Cancel</a>
             <a class="btn btn-swipe-dark ml-2" (click)="submit()">Save</a>
@@ -12,5 +15,5 @@
         </div>
     </div>
 </section>
-<app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date"></app-journal-entry-editor>
+<app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date" [(isImportant)]="isImportant"></app-journal-entry-editor>
 <app-journal-entry-view *ngIf="!openEditor" [content]="entryText" [date]="date"></app-journal-entry-view>

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { isThisISOWeek } from 'date-fns';
 import moment from 'moment';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { JournalEntryEditorComponent } from './components/journal-entry-editor/journal-entry-editor.component';
@@ -14,6 +15,7 @@ export class JournalEntryComponent implements OnInit {
   public date: Date | null = null;
   public openEditor!: boolean;
   public entryText!: string;
+  public isImportant: boolean = false;
   private entryExists!: boolean;
   @ViewChild(JournalEntryEditorComponent) editorComponent!: JournalEntryEditorComponent;
 
@@ -41,8 +43,11 @@ export class JournalEntryComponent implements OnInit {
       } else {
         this.entryExists = true;
         this.entryText = entry.entryText;
+        this.isImportant = entry.isImportant;
       }
     }
+
+    console.log(this.isImportant)
   }
 
   public submit = () => {
