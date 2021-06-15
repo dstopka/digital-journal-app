@@ -1,19 +1,24 @@
 <section class="p-4">
     <div class="row align-items-center">
         <div class="text-left pl-2 pr-4">
-            <p class="lead">{{date | date:'fullDate'}}</p>
+            <p class="lead rem-2">{{date | date:'fullDate'}}</p>
         </div>
         <span class="badge badge-important" *ngIf="isImportant">
             <i class="bi bi-bookmark-star-fill bi-badge"></i>
         </span>
-        <div *ngIf="openEditor" class="col-md-4 ml-auto text-right pr-2 justify-content-around">
-            <a class="btn btn-swipe-dark mr-2" (click)="cancel()">Cancel</a>
-            <a class="btn btn-swipe-dark ml-2" (click)="submit()">Save</a>
-        </div>
         <div *ngIf="!openEditor" class="col-md-4 ml-auto text-right pr-2">
-            <a class="btn btn-swipe-dark" (click)="edit()">Edit</a>
+            <a class="btn btn-interactive-dark" (click)="edit()">Edit</a>
         </div>
     </div>
 </section>
 <app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date" [(isImportant)]="isImportant"></app-journal-entry-editor>
 <app-journal-entry-view *ngIf="!openEditor" [content]="entryText" [date]="date"></app-journal-entry-view>
+<div *ngIf="openEditor" class="row pt-4 mt-4">
+    <div class="col-md-4text-left pr-2">
+        <a class="nav-link rem-1 lead interactive-dark zoom ml-3" (click)="submit()">Delete</a>
+    </div>
+    <div class="col-md-4 ml-auto text-right pr-2 justify-content-end">
+        <a class="nav-link rem-1 lead interactive-dark zoom mr-2 d-inline-block" (click)="cancel()">Cancel</a>
+        <a class="btn btn-interactive-dark ml-2 mr-3" (click)="submit()">Save</a>
+    </div>
+</div>

@@ -46,8 +46,6 @@ export class JournalEntryComponent implements OnInit {
         this.isImportant = entry.isImportant;
       }
     }
-
-    console.log(this.isImportant)
   }
 
   public submit = () => {
@@ -59,6 +57,10 @@ export class JournalEntryComponent implements OnInit {
   }
 
   public cancel = () => {
-    this._router.navigate([], {queryParams: {editor: null}, queryParamsHandling: 'merge'})
+    if (!this.entryExists) {
+      this._router.navigateByUrl('/dashboard');
+    } else {
+      this._router.navigate([], {queryParams: {editor: null}, queryParamsHandling: 'merge'})
+    }
   }
 }

@@ -3,23 +3,20 @@
 <div #modal class="modal fade" role="dialog" tabindex="-1" aria-modal="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content" (clickOutside)="onClickedOutside()">
-            <div class="modal-header text-center d-block">
+            <div class="modal-header text-left d-block">
                 <button type="button" class="close" aria-label="Close" (click)="close()">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">{{date | date:'longDate'}}</h4>
-            </div>
-            <div class="modal-header justify-content-end" (click)="goEntryView()">
-                <a class="btn btn-interactive-dark mr-2" role="button">
+                <a class="btn btn-interactive-dark mr-2" role="button" (click)="goEntryView()">
                     <i class="bi bi-journal-richtext mr-2"></i>Full page</a>
                 <a class="btn btn-interactive-dark ml-2" role="button" (click)="goEntryEditor()">
                     <i class="bi bi-pencil mr-2"></i>Edit</a>
             </div>
+            <div class="modal-header justify-content-start" (click)="goEntryView()">
+                <h4 class="modal-title lead">{{date | date:'longDate'}}</h4>
+            </div>
             <div class="modal-body">
                 <app-journal-entry-view [date]="date" [content]="entryText"></app-journal-entry-view>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark" (click)="close()">Close</button>
             </div>
         </div>
     </div>
