@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JournalEntry } from 'src/app/shared/models/journal-entry/journalEntry';
@@ -17,6 +17,8 @@ export class JournalEntryEditorComponent implements OnInit {
   public errorMessage: string = "";
   public showError!: boolean;
   public journalEntryControl!: FormControl;
+  @Input() public isImportant!: boolean;
+  @Output() isImportantChange: EventEmitter<any> = new EventEmitter<any>();
   @Input() date: Date | null = null;
   @Input() set entryText(text: string) {
     this._text.next(text);
@@ -40,7 +42,7 @@ export class JournalEntryEditorComponent implements OnInit {
       entryText: this.journalEntryControl.value,
       userId: Number(this._authService.getUserId()!),
       date: stringDate,
-      isImportant: false
+      isImportant: this.isImportant
     };
 
     if (update) {
@@ -74,6 +76,11 @@ export class JournalEntryEditorComponent implements OnInit {
   //     console.log(element[1]);
   //   });
   // }
+
+  public toggle = () => {
+    // console.log(this.isImportant);
+    this.isImportantChange.emit(this.isImportant);
+  }
 
 }
 

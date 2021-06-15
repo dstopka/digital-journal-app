@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
 import { JournalEntryComponent } from './journal-entry.component';
 import { JournalEntryEditorComponent } from './components/journal-entry-editor/journal-entry-editor.component';
@@ -12,7 +12,8 @@ import { JournalEntryViewComponent } from './components/journal-entry-view/journ
   imports: [
     CommonModule,
     QuillModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ], 
   declarations: [
     JournalEntryComponent,

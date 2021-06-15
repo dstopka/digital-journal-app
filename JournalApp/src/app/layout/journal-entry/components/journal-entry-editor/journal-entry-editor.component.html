@@ -1,2 +1,4 @@
+<input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" (change)="toggle()" [(ngModel)]="isImportant" [ngModelOptions]="{standalone: true}">
+<label class="btn btn-primary" for="btn-check">Important</label>
 <quill-editor class="d-block vh-50" [formControl]="journalEntryControl" [placeholder]="''" [modules]="quillConfiguration">
 </quill-editor>
