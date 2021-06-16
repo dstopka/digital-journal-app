@@ -7,6 +7,7 @@
             <i class="bi bi-bookmark-star-fill bi-badge"></i>
         </span>
         <div *ngIf="!openEditor" class="col-md-4 ml-auto text-right pr-2">
+            <a class="nav-link rem-1 lead interactive-dark zoom ml-3 d-inline-block" (click)="delete()">Delete</a>
             <a class="btn btn-interactive-dark" (click)="edit()">Edit</a>
         </div>
     </div>
@@ -14,8 +15,8 @@
 <app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date" [(isImportant)]="isImportant"></app-journal-entry-editor>
 <app-journal-entry-view *ngIf="!openEditor" [content]="entryText" [date]="date"></app-journal-entry-view>
 <div *ngIf="openEditor" class="row pt-4 mt-4">
-    <div class="col-md-4text-left pr-2">
-        <a class="nav-link rem-1 lead interactive-dark zoom ml-3" (click)="submit()">Delete</a>
+    <div *ngIf="entryExists" class="col-md-4text-left pr-2">
+        <a class="nav-link rem-1 lead interactive-dark zoom ml-3" (click)="delete()">Delete</a>
     </div>
     <div class="col-md-4 ml-auto text-right pr-2 justify-content-end">
         <a class="nav-link rem-1 lead interactive-dark zoom mr-2 d-inline-block" (click)="cancel()">Cancel</a>

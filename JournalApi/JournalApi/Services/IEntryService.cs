@@ -12,6 +12,7 @@ namespace JournalApi.Services.Abstract
         Task<long> GetNextId();
         Task CreateEntry(JournalEntry journal);
         Task UpdateEntry(JournalEntry journal);
+        Task DeleteEntry(string date, long userId);
         Task<JournalEntry> GetEntryByDateAndId(string date, long userId);
     }
 }

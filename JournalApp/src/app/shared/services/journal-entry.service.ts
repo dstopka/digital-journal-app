@@ -47,6 +47,17 @@ export class JournalEntryService {
     return this._http.get<JournalEntry>(this.apiUrlSingle, options).toPromise();
   }
 
+  public deleteEntry = (date: string) => {
+    const userId = this._authService.getUserId();
+
+    const options = { params: new HttpParams()
+                                  .set('date', date)
+                                  .set('userId', userId!.toString()) 
+                    };
+
+    return this._http.delete<JournalResponseDto>(this.apiUrlSingle, options);
+  }
+
   public saveEntry = (body: JournalEntry) => {
     return this._http.post<JournalResponseDto>(this.apiUrlSingle, body);
   }
