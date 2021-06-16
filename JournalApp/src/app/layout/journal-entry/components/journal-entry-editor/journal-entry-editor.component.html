@@ -2,6 +2,8 @@
     <input type="checkbox" class="btn-check ml-3" id="btn-check" autocomplete="off" (change)="toggle()" [(ngModel)]="isImportant" [ngModelOptions]="{standalone: true}">
     <label class="nav-link rem-1 lead interactive-dark d-inline-block" for="btn-check">Important?</label>
 </div>
-
+<div *ngIf="showError" class="alert alert-warning" role="alert">
+    The entry cannot be empty!
+</div>
 <quill-editor class="d-block vh-50" [formControl]="journalEntryControl" [placeholder]="''" [modules]="quillConfiguration">
 </quill-editor>
