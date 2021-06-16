@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isThisISOWeek } from 'date-fns';
 import moment from 'moment';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { JournalEntryEditorComponent } from './components/journal-entry-editor/journal-entry-editor.component';
@@ -12,11 +10,11 @@ import { JournalEntryEditorComponent } from './components/journal-entry-editor/j
   styleUrls: ['./journal-entry.component.scss']
 })
 export class JournalEntryComponent implements OnInit {
-  public date: Date | null = null;
+  public date!: Date;
   public openEditor!: boolean;
-  public entryText!: string;
+  public entryText: string  = '';
   public isImportant: boolean = false;
-  private entryExists!: boolean;
+  public entryExists: boolean = false;
   @ViewChild(JournalEntryEditorComponent) editorComponent!: JournalEntryEditorComponent;
 
   constructor(private _router: Router, private _activatedRoute: ActivatedRoute,
@@ -37,13 +35,12 @@ export class JournalEntryComponent implements OnInit {
     if (this.date != null)
     {
       let entry = await this._journalEntryService.getEntry(this._journalEntryService.stringifyDate(this.date)); 
-      if (entry == null) {
-        this.entryExists = false;
-        this.entryText = '';
-      } else {
+      if (entry != null) {
         this.entryExists = true;
         this.entryText = entry.entryText;
-        this.isImportant = entry.isImportant;
+        this.isImportant = entry.isImportant;       
+      } else {
+        this.openEditor = true;
       }
     }
   }
@@ -54,6 +51,17 @@ export class JournalEntryComponent implements OnInit {
 
   public edit = () => {
     this._router.navigate([], {queryParams: {editor: 'true'}, queryParamsHandling: 'merge'})
+  }
+
+  public delete = () => {
+    this._journalEntryService.deleteEntry(this._journalEntryService.stringifyDate(this.date))
+    .subscribe(_ => {
+      this._router.navigateByUrl('/dashboard');
+    },
+    error => {
+      console.log("ERROR: " + error);
+    })
+
   }
 
   public cancel = () => {

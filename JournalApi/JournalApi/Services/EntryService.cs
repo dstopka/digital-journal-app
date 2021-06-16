@@ -57,6 +57,17 @@ namespace JournalApi.Services
             await _repository.JournalEntries.ReplaceOneAsync(userIdAndDateFilter, entry);
         }
 
+        public async Task DeleteEntry(string date, long userId)
+        {
+            var builder = Builders<JournalEntry>.Filter;
+            FilterDefinition<JournalEntry> filterByUserId = builder.Eq(m => m.UserId, userId);
+            FilterDefinition<JournalEntry> filterByDate = builder.Eq(m => m.Date, date);
+
+            var userIdAndDateFilter = builder.And(new [] {filterByUserId, filterByDate});
+
+            await _repository.JournalEntries.DeleteOneAsync(userIdAndDateFilter);
+        }
+
         public async Task<JournalEntry> GetEntryByDateAndId(string date, long userId)
         {
             var builder = Builders<JournalEntry>.Filter;

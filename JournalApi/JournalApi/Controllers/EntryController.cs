@@ -96,7 +96,21 @@ namespace JournalApi.Controllers
             var updatedEntry = _mapper.Map<JournalEntry>(entryDto);
             await _entryService.UpdateEntry(updatedEntry);
 
-            return StatusCode(201);
+            return StatusCode(200);
+        }
+
+        [HttpDelete]
+        [Route("")]
+        public async Task<IActionResult> DeleteEntry([FromQuery, BindRequired]EntryQuery query) 
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            await _entryService.DeleteEntry(query.Date!, query.UserId);
+
+            return StatusCode(200);
         }
 
     }
