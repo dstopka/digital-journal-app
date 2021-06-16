@@ -3,7 +3,7 @@ import { CalendarEvent, CalendarView } from 'angular-calendar';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
 import { EntryInfoDto } from 'src/app/shared/models/journal-entry/entryInfoDto';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import moment from 'moment';
 
 interface JournalEntryEvent extends CalendarEvent {
@@ -24,7 +24,8 @@ export class CalendarComponent implements OnInit {
   public journalEntryEvents: JournalEntryEvent[] = [];
   public refresh: Subject<any> = new Subject();
 
-  constructor(private _journalEntryService: JournalEntryService, private _router: Router) {
+  constructor(private _journalEntryService: JournalEntryService, private _router: Router,
+    private _activatedRoute: ActivatedRoute) {
     this.resetDate();
   }
 
@@ -74,14 +75,40 @@ export class CalendarComponent implements OnInit {
   private changeYear = (date: Date, n: number): Date => {
     const m = date.getMonth();
     const d = date.getDate();
-    const y = date.getFullYear();
+    let y = date.getFullYear();
+    y = y + n;
 
-    return new Date(y + n, m, d);
+    return new Date(y, m, d + 2);
   }
 
   public resetDate = (): void => {
-    this.viewDate = new Date();
+    let year = new Date().getFullYear();
+    let month = new Date().getMonth();
+
+    this._activatedRoute.queryParams.subscribe(params => {
+      let y = params['date'];
+      if (y != null && y != undefined && this.yearValid(y)) {
+        year = Number(y);
+      }
+
+      let m = params['month'];
+      if (m != null && m != undefined && this.monthValid(m)) {
+        month = Number(m);
+      }
+    })
+
+    this.viewDate = new Date(year, month, 1);
     this.nextYearDate = this.changeYear(this.viewDate, 1);
     this.previousYearDate = this.changeYear(this.viewDate, -1);
+
+    this._router.navigate([], {queryParams: null});
+  }
+
+  private yearValid = (year: string): boolean => {
+    return Number(year) > 1900;
+  }
+
+  private monthValid = (month: string): boolean => {
+    return Number(month) > 0 && Number(month) <= 12;
   }
 }

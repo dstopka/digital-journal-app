@@ -11,6 +11,11 @@
             <a class="btn btn-interactive-dark" (click)="edit()">Edit</a>
         </div>
     </div>
+    <div *ngIf="!openEditor" class="row align-items-start">
+        <a class="nav-link rem-1 interactive-dark d-inline-block" (click)="navigateToDate()">
+            <i class="bi bi-arrow-return-left mr-2"></i>go to calendar
+        </a>
+    </div>
 </section>
 <app-journal-entry-editor *ngIf="openEditor" [entryText]="entryText" [date]="date" [(isImportant)]="isImportant"></app-journal-entry-editor>
 <app-journal-entry-view *ngIf="!openEditor" [content]="entryText" [date]="date"></app-journal-entry-view>

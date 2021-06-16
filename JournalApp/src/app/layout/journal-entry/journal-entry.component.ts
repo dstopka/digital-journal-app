@@ -56,7 +56,7 @@ export class JournalEntryComponent implements OnInit {
   public delete = () => {
     this._journalEntryService.deleteEntry(this._journalEntryService.stringifyDate(this.date))
     .subscribe(_ => {
-      this._router.navigateByUrl('/dashboard');
+      this.navigateToDate();
     },
     error => {
       console.log("ERROR: " + error);
@@ -66,9 +66,13 @@ export class JournalEntryComponent implements OnInit {
 
   public cancel = () => {
     if (!this.entryExists) {
-      this._router.navigateByUrl('/dashboard');
+      this.navigateToDate();
     } else {
       this._router.navigate([], {queryParams: {editor: null}, queryParamsHandling: 'merge'})
     }
+  }
+
+  public navigateToDate = () => {
+    this._router.navigate(['/dashboard'], {queryParams: {year: this.date.getFullYear(), month: this.date.getMonth()}});
   }
 }
