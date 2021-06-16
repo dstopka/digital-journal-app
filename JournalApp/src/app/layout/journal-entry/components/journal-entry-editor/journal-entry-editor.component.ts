@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JournalEntry } from 'src/app/shared/models/journal-entry/journalEntry';
 import { JournalEntryService } from 'src/app/shared/services/journal-entry.service';
@@ -30,11 +30,16 @@ export class JournalEntryEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this._text.subscribe(text => {
-      this.journalEntryControl = new FormControl(text);
+      this.journalEntryControl = new FormControl(text, [Validators.required]);
     })    
   }
 
   public submit = (update: boolean) => {
+    if (!this.journalEntryControl.valid) {
+      this.showError = true;
+      return;
+    }
+
     this.showError = false;
     const stringDate = this._journalEntryService.stringifyDate(this.date!);
 
@@ -59,7 +64,8 @@ export class JournalEntryEditorComponent implements OnInit {
     } else {
       this._journalEntryService.saveEntry(journal)
       .subscribe(_ => {
-        this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}});
+        this._router.navigateByUrl('/', {skipLocationChange: true}).then(()=>
+          this._router.navigate(['/entry'], {queryParams: {date: stringDate, editor: false}}));
       },
       error => {
         this.errorMessage = error;
@@ -77,10 +83,9 @@ export class JournalEntryEditorComponent implements OnInit {
   //   });
   // }
 
-  public toggle = () => {
+  public toggle = (): void => {
     this.isImportantChange.emit(this.isImportant);
   }
-
 }
 
 export const QuillConfiguration = {
